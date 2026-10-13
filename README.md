@@ -30,6 +30,17 @@ const PARTY = {
 
 The weekday, the times, the calendar link, the countdown and the RSVP message are all worked out from these values.
 
+## Photo and logo
+
+- `assets/zian-photo.webp`: the birthday kid's photo, shown inside the tire frame. Use a square image with the face centered; a transparent background works best.
+- `assets/zian-logo.webp`: the ZIAN flame logo used as the title.
+
+Replace either file with one of the same name to change it. If a file is missing, the page shows the first letter of the name in the tire and the name as text instead of the logo.
+
+## Colors
+
+The page uses one calm palette: paper `#f7f6f0` as the main color, warm ink for text, and the logo's red and yellow as small accents. The colors are defined once at the top of the `<style>` block.
+
 ## Personal link for each guest
 
 Add the guest's name to the end of the link. Dashes become spaces:
