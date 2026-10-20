@@ -47,7 +47,6 @@
   --stop:#ff3030;
   --go:#26e36a;
   --series:#ffdc4a;
-  --ok:#13803f;
   --field-line:#8a94ac;
   --focus:var(--card);
 
@@ -278,8 +277,6 @@ body{
 .pass-step{margin:0;font-weight:700}
 .pass-step:focus{outline:none}
 .ms-bolt{fill:var(--card)}
-.pass-step.sent{display:flex;align-items:center;gap:10px;font-size:var(--t-lg);line-height:1.2}
-.pass-step.sent::before{content:"✓";flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:var(--ok);color:var(--chrome);font-size:1.2rem}
 .backup{display:flex;flex-direction:column;gap:12px}
 .pass-msg{margin:0;padding:12px 14px;border-radius:12px;background:var(--field);font-weight:600;line-height:1.35;user-select:text;-webkit-user-select:text}
 .linkish{align-self:flex-start;padding:4px 0;border:0;background:none;color:var(--ink);font:700 var(--t-md) var(--font-body);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
@@ -584,7 +581,6 @@ At the back of GM Blu Carwash</span></dd></div>
       <p class="pass-line" id="pass-line">1 racer · 1 pit crew</p>
       <div class="perf" aria-hidden="true"></div>
       <p class="pass-step" id="pass-step" tabindex="-1">Last step: tap Send on Messenger, then paste your message and send it.</p>
-      <button class="linkish" id="backup-btn" type="button" hidden>Also send it on Messenger</button>
       <div class="backup" id="backup">
         <a class="btn btn-blue" id="ms-link" href="fb-messenger://">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5C6.7 2.5 2.5 6.4 2.5 11.3c0 2.6 1.2 4.9 3.1 6.5v3.7l3.4-1.9c.9.3 1.9.4 3 .4 5.3 0 9.5-3.9 9.5-8.7S17.3 2.5 12 2.5z" fill="currentColor"/><path class="ms-bolt" d="M6.6 14.1l3.6-3.8 2.3 1.8 3.9-3.8-3.6 3.8-2.3-1.8z"/></svg>
@@ -652,16 +648,7 @@ const PARTY = {
   },
   // Guests answer in the Messenger app. Put the family's Messenger username here (the part after
   // facebook.com/ or m.me/) so the button opens their chat directly; with "" it opens Messenger and guests pick the chat.
-  messenger: "",
-  // Guest list for the family: with a Google Form filled in here, one tap sends the answer straight to the form
-  // (email alert + a list of who's coming). Leave action "" and guests send their answer on Messenger instead.
-  rsvpForm: {
-    action: "",   // e.g. "https://docs.google.com/forms/d/e/1FAIpQL.../formResponse"
-    name: "",     // e.g. "entry.123456789"
-    attending: "",
-    guests: "",
-    link: ""      // optional: the name from a personal link
-  }
+  messenger: ""
 };
 /* Photo and logo live in assets/zian-photo.webp and assets/zian-logo.webp */
 /* ----------------------------------------------- */
@@ -1059,8 +1046,7 @@ photoBox.addEventListener("click", e => {
 });
 photoBox.addEventListener("close", () => document.body.append($("#confetti")));
 
-/* RSVP: one tap. With a Google Form set up the answer goes straight to the family's guest list;
-   otherwise (or if sending fails) guests send it on Messenger. */
+/* RSVP: guests pick an answer with one tap, then send it in the Messenger app */
 const RSVP_KEY = KEY + "-rsvp" + (guest ? "-" + guest.toLowerCase().replace(/\W+/g, "-") : "");
 const store = {
   get() { try { return JSON.parse(localStorage.getItem(RSVP_KEY)); } catch (e) { return null; } },
@@ -1108,53 +1094,30 @@ function gridSlot(name) {
   return pad(h % 24 + 1);
 }
 
-// Sends the answer to the family's Google Form. Returns false when no form is set up or the send fails.
-async function sendToHost(v) {
-  const f = PARTY.rsvpForm || {};
-  if (!f.action || !f.name) return false;
-  const body = new URLSearchParams();
-  const add = (key, val) => { if (key) body.append(key, String(val)); };
-  add(f.name, v.name);
-  add(f.attending, v.yes ? "Yes" : "No");
-  add(f.guests, v.yes ? v.count : 0);
-  add(f.link, guest);
-  const ctrl = typeof AbortController === "function" ? new AbortController() : null;
-  const timer = setTimeout(() => { if (ctrl) ctrl.abort(); }, 8000);
-  try {
-    // Google Forms does not answer cross-site reads, so the reply is opaque; reaching the server counts as sent
-    await fetch(f.action, { method: "POST", mode: "no-cors", body, signal: ctrl ? ctrl.signal : undefined });
-    return true;
-  } catch (e) {
-    return false;
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
 // With a username the button opens the family's chat in the Messenger app (m.me opens the app on phones);
 // without one it opens the Messenger app itself and the guest picks the chat
 const msLink = $("#ms-link");
 if (PARTY.messenger) {
   msLink.href = `https://m.me/${enc(PARTY.messenger)}`;
+} else if (window.top !== window.self) {
+  // Inside an embedded preview the app link can't open, so use Messenger's web address instead
+  msLink.href = "https://www.messenger.com/";
+}
+if (msLink.href.startsWith("http")) {
   msLink.target = "_blank";
   msLink.rel = "noopener";
 }
 
-function showPass(v, celebrate, sent) {
+function showPass(v, celebrate) {
   $("#pass-title").textContent = v.yes ? "Pit pass" : "Spectator note";
   $("#pass-slot").textContent = v.yes ? `Grid slot ${gridSlot(v.name)}` : "Sitting this one out";
   $("#pass-name").textContent = v.name;
   $("#pass-line").textContent = v.yes ? `${v.count} ${v.count === 1 ? "racer" : "racers"} coming` : "Can't make it this time";
   $("#pass-msg").textContent = message(v);
   const step = $("#pass-step");
-  step.classList.toggle("sent", !!sent);
-  step.textContent = sent
-    ? (v.yes ? "Sent! The family has your answer. See you there!" : "Sent! The family has your answer. Thank you!")
-    : (PARTY.messenger
-      ? "Last step: tap Send on Messenger, then paste your message and send it."
-      : "Last step: tap Send on Messenger, open the family's chat, then paste your message and send it.");
-  $("#backup").hidden = !!sent;
-  $("#backup-btn").hidden = !sent;
+  step.textContent = PARTY.messenger
+    ? "Last step: tap Send on Messenger, then paste your message and send it."
+    : "Last step: tap Send on Messenger, open the family's chat, then paste your message and send it.";
   form.hidden = true;
   pass.hidden = false;
   if (celebrate) {
@@ -1169,11 +1132,10 @@ function showPass(v, celebrate, sent) {
 }
 
 // Which answer button was tapped (Enter in the name field counts as "Coming!")
-let choice = "yes", sending = false;
+let choice = "yes";
 $$(".answer-row .btn").forEach(btn => btn.addEventListener("click", () => { choice = btn.value; }));
-form.addEventListener("submit", async e => {
+form.addEventListener("submit", e => {
   e.preventDefault();
-  if (sending) return;
   const v = { ...collect(), yes: choice !== "no" };
   err.hidden = true;
   if (!v.name) {
@@ -1182,23 +1144,11 @@ form.addEventListener("submit", async e => {
     nameIn.focus();
     return;
   }
-  sending = true;
-  form.inert = true;
-  const btn = v.yes ? $("#btn-yes") : $("#btn-no"), label = btn.textContent;
-  btn.textContent = "Sending…";
-  const sent = await sendToHost(v);
-  btn.textContent = label;
-  form.inert = false;
-  sending = false;
-  store.set({ ...v, done: true, sent });
+  store.set({ ...v, done: true });
   if (v.yes) Sound.beep(880, 0.2);
-  showPass(v, true, sent);
+  showPass(v, true);
 });
 
-$("#backup-btn").addEventListener("click", () => {
-  $("#backup").hidden = false;
-  $("#backup-btn").hidden = true;
-});
 $("#edit-btn").addEventListener("click", () => {
   pass.hidden = true;
   form.hidden = false;
@@ -1275,7 +1225,7 @@ if (saved && typeof saved === "object") {
 }
 if (guest && !nameIn.value.trim()) nameIn.value = guest;
 syncSteps();
-if (saved && saved.done && saved.name) showPass({ ...collect(), yes: saved.yes !== false }, false, !!saved.sent);
+if (saved && saved.done && saved.name) showPass({ ...collect(), yes: saved.yes !== false }, false);
 </script>
 </body>
 </html>
