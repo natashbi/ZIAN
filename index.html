@@ -47,6 +47,7 @@
   --stop:#ff3030;
   --go:#26e36a;
   --series:#ffdc4a;
+  --ok:#13803f;
   --field-line:#8a94ac;
   --focus:var(--card);
 
@@ -252,15 +253,6 @@ body{
 .input{width:100%;min-height:50px;padding:10px 14px;border-radius:12px;border:2px solid var(--field-line);background:var(--field);color:var(--ink);font:600 var(--t-md)/1.3 var(--font-body)}
 .input::placeholder{color:var(--ink-faint);opacity:1}
 .input:focus{outline:none;border-color:var(--card);box-shadow:0 0 0 4px var(--ring)}
-textarea.input{min-height:78px;resize:vertical}
-.seg{margin:0;padding:0;border:0;min-width:0}
-.seg-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
-.seg input{position:absolute;width:1px;height:1px;opacity:0}
-.seg label{display:flex;align-items:center;justify-content:center;min-height:52px;padding:8px 10px;border-radius:12px;border:2px solid var(--chrome-2);background:var(--field);font-weight:800;letter-spacing:.05em;text-transform:uppercase;text-align:center;line-height:1.1;cursor:pointer}
-.seg input:checked+label{background:var(--card);border-color:var(--card);color:var(--chrome)}
-#rsvp-no:checked+label{background:var(--ink);border-color:var(--ink)}
-.seg input:focus-visible+label{outline:3px solid var(--focus);outline-offset:2px}
-.counts{display:grid;gap:10px}
 .stepper{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:14px;border:2px solid var(--chrome-2);background:var(--field)}
 .stepper-l{font-weight:800;font-size:var(--t-md);letter-spacing:.05em;text-transform:uppercase}
 .stepper-l small{display:block;font-weight:600;font-size:var(--t-sm);letter-spacing:0;text-transform:none;color:var(--ink-soft)}
@@ -272,6 +264,8 @@ textarea.input{min-height:78px;resize:vertical}
 .count.bump{animation:bump .25s ease-out}
 @keyframes bump{from{transform:scale(1.35)}}
 .err{margin:0;font-weight:700;color:var(--flame-red-deep)}
+.answer-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.answer-row .btn{min-height:56px;padding-inline:10px;font-size:var(--t-md)}
 
 .pass{--focus:var(--ink);position:relative;transform-origin:50% 0;scroll-margin-top:12px;overflow:hidden;display:flex;flex-direction:column;gap:12px;padding:0 16px 18px;border-radius:18px;background:var(--flame-yellow);color:var(--ink)}
 .pass.show{animation:pass-in .55s cubic-bezier(.2,1.2,.4,1)}
@@ -284,6 +278,9 @@ textarea.input{min-height:78px;resize:vertical}
 .pass-step{margin:0;font-weight:700}
 .pass-step:focus{outline:none}
 .ms-bolt{fill:var(--card)}
+.pass-step.sent{display:flex;align-items:center;gap:10px;font-size:var(--t-lg);line-height:1.2}
+.pass-step.sent::before{content:"✓";flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:var(--ok);color:var(--chrome);font-size:1.2rem}
+.backup{display:flex;flex-direction:column;gap:12px}
 .pass-msg{margin:0;padding:12px 14px;border-radius:12px;background:var(--field);font-weight:600;line-height:1.35;user-select:text;-webkit-user-select:text}
 .linkish{align-self:flex-start;padding:4px 0;border:0;background:none;color:var(--ink);font:700 var(--t-md) var(--font-body);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 
@@ -564,40 +561,20 @@ At the back of GM Blu Carwash</span></dd></div>
         <input class="input" id="rsvp-name" name="name" type="text" autocomplete="name" placeholder="e.g. Maya and family" maxlength="60">
       </div>
 
-      <fieldset class="seg">
-        <legend class="lbl">Can you make it?</legend>
-        <div class="seg-row">
-          <input type="radio" id="rsvp-yes" name="attend" value="yes" checked><label for="rsvp-yes">We'll be there</label>
-          <input type="radio" id="rsvp-no" name="attend" value="no"><label for="rsvp-no">Can't make it</label>
+      <div class="stepper">
+        <label class="stepper-l" for="rsvp-count">How many are coming?<small>Including you</small></label>
+        <div class="stepper-c">
+          <button class="step" type="button" data-for="rsvp-count" data-d="-1" aria-label="One fewer">−</button>
+          <input class="count" id="rsvp-count" type="number" inputmode="numeric" min="1" max="20" value="1">
+          <button class="step" type="button" data-for="rsvp-count" data-d="1" aria-label="One more">+</button>
         </div>
-      </fieldset>
-
-      <div class="counts" id="counts">
-        <div class="stepper">
-          <label class="stepper-l" for="rsvp-kids">Racers<small>Kids coming</small></label>
-          <div class="stepper-c">
-            <button class="step" type="button" data-for="rsvp-kids" data-d="-1" aria-label="One fewer kid">−</button>
-            <input class="count" id="rsvp-kids" type="number" inputmode="numeric" min="0" max="9" value="1">
-            <button class="step" type="button" data-for="rsvp-kids" data-d="1" aria-label="One more kid">+</button>
-          </div>
-        </div>
-        <div class="stepper">
-          <label class="stepper-l" for="rsvp-adults">Pit crew<small>Grown-ups coming</small></label>
-          <div class="stepper-c">
-            <button class="step" type="button" data-for="rsvp-adults" data-d="-1" aria-label="One fewer grown-up">−</button>
-            <input class="count" id="rsvp-adults" type="number" inputmode="numeric" min="0" max="9" value="1">
-            <button class="step" type="button" data-for="rsvp-adults" data-d="1" aria-label="One more grown-up">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="lbl" for="rsvp-note">Message for <span data-bind="name">Zian</span> <span class="opt">(optional)</span></label>
-        <textarea class="input" id="rsvp-note" rows="2" maxlength="200" placeholder="God bless you, Zian!"></textarea>
       </div>
 
       <p class="err" id="rsvp-err" role="alert" hidden></p>
-      <button class="btn btn-red" type="submit" id="submit-btn">Get my pit pass</button>
+      <div class="answer-row">
+        <button class="btn btn-red" type="submit" value="yes" id="btn-yes">Coming!</button>
+        <button class="btn btn-line" type="submit" value="no" id="btn-no">Can't make it</button>
+      </div>
     </form>
 
     <div class="pass" id="pass" hidden>
@@ -607,11 +584,14 @@ At the back of GM Blu Carwash</span></dd></div>
       <p class="pass-line" id="pass-line">1 racer · 1 pit crew</p>
       <div class="perf" aria-hidden="true"></div>
       <p class="pass-step" id="pass-step" tabindex="-1">Last step: tap Send on Messenger, then paste your message and send it.</p>
-      <a class="btn btn-blue" id="ms-link" href="fb-messenger://">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5C6.7 2.5 2.5 6.4 2.5 11.3c0 2.6 1.2 4.9 3.1 6.5v3.7l3.4-1.9c.9.3 1.9.4 3 .4 5.3 0 9.5-3.9 9.5-8.7S17.3 2.5 12 2.5z" fill="currentColor"/><path class="ms-bolt" d="M6.6 14.1l3.6-3.8 2.3 1.8 3.9-3.8-3.6 3.8-2.3-1.8z"/></svg>
-        Send on Messenger
-      </a>
-      <p class="pass-msg" id="pass-msg"></p>
+      <button class="linkish" id="backup-btn" type="button" hidden>Also send it on Messenger</button>
+      <div class="backup" id="backup">
+        <a class="btn btn-blue" id="ms-link" href="fb-messenger://">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5C6.7 2.5 2.5 6.4 2.5 11.3c0 2.6 1.2 4.9 3.1 6.5v3.7l3.4-1.9c.9.3 1.9.4 3 .4 5.3 0 9.5-3.9 9.5-8.7S17.3 2.5 12 2.5z" fill="currentColor"/><path class="ms-bolt" d="M6.6 14.1l3.6-3.8 2.3 1.8 3.9-3.8-3.6 3.8-2.3-1.8z"/></svg>
+          Send on Messenger
+        </a>
+        <p class="pass-msg" id="pass-msg"></p>
+      </div>
       <button class="linkish" id="edit-btn" type="button">Change my answer</button>
     </div>
   </section>
@@ -672,7 +652,16 @@ const PARTY = {
   },
   // Guests answer in the Messenger app. Put the family's Messenger username here (the part after
   // facebook.com/ or m.me/) so the button opens their chat directly; with "" it opens Messenger and guests pick the chat.
-  messenger: ""
+  messenger: "",
+  // Guest list for the family: with a Google Form filled in here, one tap sends the answer straight to the form
+  // (email alert + a list of who's coming). Leave action "" and guests send their answer on Messenger instead.
+  rsvpForm: {
+    action: "",   // e.g. "https://docs.google.com/forms/d/e/1FAIpQL.../formResponse"
+    name: "",     // e.g. "entry.123456789"
+    attending: "",
+    guests: "",
+    link: ""      // optional: the name from a personal link
+  }
 };
 /* Photo and logo live in assets/zian-photo.webp and assets/zian-logo.webp */
 /* ----------------------------------------------- */
@@ -718,7 +707,6 @@ const bind = {
 $$("[data-bind]").forEach(el => { const v = bind[el.dataset.bind]; if (v != null) el.textContent = v; });
 document.title = eventName;
 $("#box-photo").alt = `Photo of ${PARTY.name}`;
-$("#rsvp-note").placeholder = `God bless you, ${PARTY.name}!`;
 
 /* Optional personal links: ...#Ninong-Jerald or ...?to=Maya%20and%20family show "Special invite for" with that name.
    The plain link shows no name, so it can go to everyone. */
@@ -1071,44 +1059,36 @@ photoBox.addEventListener("click", e => {
 });
 photoBox.addEventListener("close", () => document.body.append($("#confetti")));
 
-/* RSVP: guests answer in the Messenger app */
+/* RSVP: one tap. With a Google Form set up the answer goes straight to the family's guest list;
+   otherwise (or if sending fails) guests send it on Messenger. */
 const RSVP_KEY = KEY + "-rsvp" + (guest ? "-" + guest.toLowerCase().replace(/\W+/g, "-") : "");
 const store = {
   get() { try { return JSON.parse(localStorage.getItem(RSVP_KEY)); } catch (e) { return null; } },
   set(v) { try { localStorage.setItem(RSVP_KEY, JSON.stringify(v)); } catch (e) {} }
 };
 const form = $("#rsvp-form"), pass = $("#pass"), err = $("#rsvp-err");
-const nameIn = $("#rsvp-name"), kidsIn = $("#rsvp-kids"), adultsIn = $("#rsvp-adults"), noteIn = $("#rsvp-note");
-const attending = () => $("#rsvp-yes").checked;
-const clampCount = n => { n = parseInt(n, 10); return Number.isFinite(n) ? Math.min(9, Math.max(0, n)) : 0; };
+const nameIn = $("#rsvp-name"), countIn = $("#rsvp-count");
+const clampCount = n => { n = parseInt(n, 10); return Number.isFinite(n) ? Math.min(20, Math.max(1, n)) : 1; };
 
 function syncSteps() {
-  [kidsIn, adultsIn].forEach(inp => {
-    inp.value = clampCount(inp.value);
-    $$(`.step[data-for="${inp.id}"]`).forEach(b => {
-      b.disabled = (+b.dataset.d < 0 && +inp.value <= 0) || (+b.dataset.d > 0 && +inp.value >= 9);
-    });
+  countIn.value = clampCount(countIn.value);
+  $$(".step").forEach(b => {
+    b.disabled = (+b.dataset.d < 0 && +countIn.value <= 1) || (+b.dataset.d > 0 && +countIn.value >= 20);
   });
 }
-function syncAttend() {
-  $("#counts").hidden = !attending();
-  $("#submit-btn").textContent = attending() ? "Get my pit pass" : "Send my answer";
-}
 $$(".step").forEach(b => b.addEventListener("click", () => {
-  const inp = document.getElementById(b.dataset.for);
-  inp.value = clampCount(+inp.value + +b.dataset.d);
+  countIn.value = clampCount(+countIn.value + +b.dataset.d);
   syncSteps();
   saveDraft();
-  inp.classList.remove("bump");
-  void inp.offsetWidth;
-  inp.classList.add("bump");
+  countIn.classList.remove("bump");
+  void countIn.offsetWidth;
+  countIn.classList.add("bump");
   buzz(8);
 }));
-[kidsIn, adultsIn].forEach(inp => inp.addEventListener("change", syncSteps));
-$$('input[name="attend"]').forEach(r => r.addEventListener("change", () => { syncAttend(); saveDraft(); }));
+countIn.addEventListener("change", syncSteps);
 
 function collect() {
-  return { name: nameIn.value.trim(), yes: attending(), kids: clampCount(kidsIn.value), adults: clampCount(adultsIn.value), note: noteIn.value.trim() };
+  return { name: nameIn.value.trim(), count: clampCount(countIn.value) };
 }
 function saveDraft() {
   err.hidden = true;
@@ -1118,16 +1098,37 @@ form.addEventListener("input", saveDraft);
 
 function message(v) {
   const when = `${weekday} ${D} ${month}`;
-  let m = v.yes
-    ? `Hi! ${v.name} will be at ${eventName} on ${when} (ceremony ${ceremonyClock}). Kids: ${v.kids}. Grown-ups: ${v.adults}.`
+  return v.yes
+    ? `Hi! ${v.name} is coming to ${eventName} on ${when} (${v.count} ${v.count === 1 ? "person" : "people"}).`
     : `Hi! ${v.name} can't make it to ${eventName} on ${when}. God bless ${PARTY.name}!`;
-  if (v.note) m += ` Message for ${PARTY.name}: ${v.note}`;
-  return m;
 }
 function gridSlot(name) {
   let h = 0;
   for (const ch of name) h = (h * 31 + ch.codePointAt(0)) >>> 0;
   return pad(h % 24 + 1);
+}
+
+// Sends the answer to the family's Google Form. Returns false when no form is set up or the send fails.
+async function sendToHost(v) {
+  const f = PARTY.rsvpForm || {};
+  if (!f.action || !f.name) return false;
+  const body = new URLSearchParams();
+  const add = (key, val) => { if (key) body.append(key, String(val)); };
+  add(f.name, v.name);
+  add(f.attending, v.yes ? "Yes" : "No");
+  add(f.guests, v.yes ? v.count : 0);
+  add(f.link, guest);
+  const ctrl = typeof AbortController === "function" ? new AbortController() : null;
+  const timer = setTimeout(() => { if (ctrl) ctrl.abort(); }, 8000);
+  try {
+    // Google Forms does not answer cross-site reads, so the reply is opaque; reaching the server counts as sent
+    await fetch(f.action, { method: "POST", mode: "no-cors", body, signal: ctrl ? ctrl.signal : undefined });
+    return true;
+  } catch (e) {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 // With a username the button opens the family's chat in the Messenger app (m.me opens the app on phones);
@@ -1138,18 +1139,22 @@ if (PARTY.messenger) {
   msLink.target = "_blank";
   msLink.rel = "noopener";
 }
-$("#pass-step").textContent = PARTY.messenger
-  ? "Last step: tap Send on Messenger, then paste your message and send it."
-  : "Last step: tap Send on Messenger, open our chat, then paste your message and send it.";
 
-function showPass(v, celebrate) {
+function showPass(v, celebrate, sent) {
   $("#pass-title").textContent = v.yes ? "Pit pass" : "Spectator note";
   $("#pass-slot").textContent = v.yes ? `Grid slot ${gridSlot(v.name)}` : "Sitting this one out";
   $("#pass-name").textContent = v.name;
-  $("#pass-line").textContent = v.yes
-    ? `${v.kids} racer${v.kids === 1 ? "" : "s"} · ${v.adults} pit crew`
-    : "Can't make it this time";
+  $("#pass-line").textContent = v.yes ? `${v.count} ${v.count === 1 ? "racer" : "racers"} coming` : "Can't make it this time";
   $("#pass-msg").textContent = message(v);
+  const step = $("#pass-step");
+  step.classList.toggle("sent", !!sent);
+  step.textContent = sent
+    ? (v.yes ? "Sent! The family has your answer. See you there!" : "Sent! The family has your answer. Thank you!")
+    : (PARTY.messenger
+      ? "Last step: tap Send on Messenger, then paste your message and send it."
+      : "Last step: tap Send on Messenger, open the family's chat, then paste your message and send it.");
+  $("#backup").hidden = !!sent;
+  $("#backup-btn").hidden = !sent;
   form.hidden = true;
   pass.hidden = false;
   if (celebrate) {
@@ -1157,32 +1162,43 @@ function showPass(v, celebrate) {
     void pass.offsetWidth;
     pass.classList.add("show");
     pass.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
-    $("#pass-step").focus({ preventScroll: true });
+    step.focus({ preventScroll: true });
     buzz(v.yes ? [30, 40, 60] : 20);
     if (v.yes) setTimeout(() => burstFrom($("#pass-name"), 100), 350);
   }
 }
 
-form.addEventListener("submit", e => {
+// Which answer button was tapped (Enter in the name field counts as "Coming!")
+let choice = "yes", sending = false;
+$$(".answer-row .btn").forEach(btn => btn.addEventListener("click", () => { choice = btn.value; }));
+form.addEventListener("submit", async e => {
   e.preventDefault();
-  const v = collect();
+  if (sending) return;
+  const v = { ...collect(), yes: choice !== "no" };
   err.hidden = true;
   if (!v.name) {
-    err.textContent = "Add your name so we know who's coming.";
+    err.textContent = "Add your name so the family knows who's coming.";
     err.hidden = false;
     nameIn.focus();
     return;
   }
-  if (v.yes && v.kids + v.adults === 0) {
-    err.textContent = "Add at least one racer or grown-up.";
-    err.hidden = false;
-    return;
-  }
-  store.set({ ...v, done: true });
+  sending = true;
+  form.inert = true;
+  const btn = v.yes ? $("#btn-yes") : $("#btn-no"), label = btn.textContent;
+  btn.textContent = "Sending…";
+  const sent = await sendToHost(v);
+  btn.textContent = label;
+  form.inert = false;
+  sending = false;
+  store.set({ ...v, done: true, sent });
   if (v.yes) Sound.beep(880, 0.2);
-  showPass(v, true);
+  showPass(v, true, sent);
 });
 
+$("#backup-btn").addEventListener("click", () => {
+  $("#backup").hidden = false;
+  $("#backup-btn").hidden = true;
+});
 $("#edit-btn").addEventListener("click", () => {
   pass.hidden = true;
   form.hidden = false;
@@ -1255,15 +1271,11 @@ if ("ResizeObserver" in window) {
 const saved = store.get();
 if (saved && typeof saved === "object") {
   nameIn.value = saved.name || "";
-  $(saved.yes === false ? "#rsvp-no" : "#rsvp-yes").checked = true;
-  kidsIn.value = clampCount(saved.kids == null ? 1 : saved.kids);
-  adultsIn.value = clampCount(saved.adults == null ? 1 : saved.adults);
-  noteIn.value = saved.note || "";
+  countIn.value = clampCount(saved.count == null ? 1 : saved.count);
 }
 if (guest && !nameIn.value.trim()) nameIn.value = guest;
 syncSteps();
-syncAttend();
-if (saved && saved.done && saved.name) showPass(collect(), false);
+if (saved && saved.done && saved.name) showPass({ ...collect(), yes: saved.yes !== false }, false, !!saved.sent);
 </script>
 </body>
 </html>
