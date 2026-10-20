@@ -36,6 +36,18 @@ The weekday, the times, the calendar link, the countdown and the RSVP message ar
 
 The Ninongs and Ninangs are listed directly in the HTML, in the section with the heading "Ninongs & Ninangs".
 
+## Automatic RSVP (Google Form)
+
+With a Google Form connected, guests only tap **Submit**: their answer goes straight to the form, you get an email for each one, and all answers collect in one list. Without it, guests get the one-tap Viber / WhatsApp / Messenger / text buttons instead.
+
+1. Go to [forms.google.com](https://forms.google.com) and start a blank form.
+2. Add these questions, all as **Short answer**: Name, Attending, Kids, Adults, Message, Invite link.
+3. In **Settings**, turn off anything that requires guests to sign in or collect email addresses.
+4. In the **Responses** tab, open the ⋮ menu and turn on **Get email notifications for new responses**. You can also link the responses to a Google Sheet.
+5. Fill in `PARTY.rsvpForm` in `index.html`: `action` is the form address ending in `/formResponse`, and each question needs its `entry.…` number (shown in the form's "Get pre-filled link" URL).
+
+Automatic sending works when the invite is on a normal website such as GitHub Pages. The claude.ai preview link blocks pages from sending data out, so there the send buttons appear instead.
+
 ## Personal link for each guest
 
 Add the guest's name to the end of the link. Dashes become spaces:

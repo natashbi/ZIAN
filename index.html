@@ -288,6 +288,10 @@ textarea.input{min-height:78px;resize:vertical}
 .perf{margin-inline:-16px;border-top:3px dashed var(--ink);opacity:.35}
 .pass-step{margin:0;font-weight:700}
 .pass-step:focus{outline:none}
+.pass-step.sent{display:flex;align-items:center;gap:10px;font-size:var(--t-lg);line-height:1.2}
+.pass-step.sent::before{content:"✓";flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:var(--wa);color:var(--chrome);font-size:1.2rem}
+.send-box{display:flex;flex-direction:column;gap:12px}
+.btn[aria-busy="true"]{opacity:.75;cursor:progress}
 .pass-msg{margin:0;padding:12px 14px;border-radius:12px;background:var(--field);font-weight:600;line-height:1.35;user-select:text;-webkit-user-select:text}
 .pass-fine{margin:0;font-weight:600}
 .pass-fine .linkish{padding:0;font-size:inherit;vertical-align:baseline}
@@ -617,15 +621,17 @@ textarea.input{min-height:78px;resize:vertical}
       <p class="pass-name" id="pass-name">Maya and family</p>
       <p class="pass-line" id="pass-line">1 racer · 1 pit crew</p>
       <div class="perf" aria-hidden="true"></div>
-      <p class="pass-step" id="pass-step" tabindex="-1">Last step: tap an app to send this to <span data-bind="host">Amy</span>. The message is already written, so just press send.</p>
-      <p class="pass-msg" id="pass-msg"></p>
-      <div class="actions">
-        <a class="btn btn-viber" id="viber-link" href="viber://chat">Send on Viber</a>
-        <a class="btn btn-wa" id="wa-link" href="https://wa.me/" target="_blank" rel="noopener">Send on WhatsApp</a>
-        <a class="btn btn-blue" id="ms-link" href="https://m.me/" target="_blank" rel="noopener">Send on Messenger</a>
-        <a class="btn btn-line" id="sms-link" href="sms:">Send as text message</a>
+      <p class="pass-step" id="pass-step" tabindex="-1">Last step: tap an app to send this to <span data-bind="host">Amy</span>.</p>
+      <div class="send-box" id="send-box">
+        <p class="pass-msg" id="pass-msg"></p>
+        <div class="actions">
+          <a class="btn btn-viber" id="viber-link" href="viber://chat">Send on Viber</a>
+          <a class="btn btn-wa" id="wa-link" href="https://wa.me/" target="_blank" rel="noopener">Send on WhatsApp</a>
+          <a class="btn btn-blue" id="ms-link" href="https://m.me/" target="_blank" rel="noopener">Send on Messenger</a>
+          <a class="btn btn-line" id="sms-link" href="sms:">Send as text message</a>
+        </div>
+        <p class="pass-fine">Nothing opened? <button class="linkish" id="copy-btn" type="button">Copy the message</button> and send it to <span data-bind="host">Amy</span> at <span class="sel" data-bind="phone">123.123.1234</span>.</p>
       </div>
-      <p class="pass-fine">Nothing opened? <button class="linkish" id="copy-btn" type="button">Copy the message</button> and send it to <span data-bind="host">Amy</span> at <span class="sel" data-bind="phone">123.123.1234</span>.</p>
       <button class="linkish" id="edit-btn" type="button">Change my answer</button>
     </div>
   </section>
@@ -680,7 +686,18 @@ const PARTY = {
   viber: "+11231231234",   // number with country code, e.g. "+639171234567"; "" hides the Viber button
   messenger: "",           // the host's Messenger username (m.me/username); "" hides the Messenger button
   // Shown until a guest's name is added to the link: ...#Maya-and-family or ...?to=Maya%20and%20family
-  guestPlaceholder: "Guest Name"
+  guestPlaceholder: "Guest Name",
+  // Automatic RSVP: answers go straight to the host's Google Form (email alert + a list in Google Sheets).
+  // Fill in the form's "formResponse" address and each question's entry number. Leave action "" to use the send buttons instead.
+  rsvpForm: {
+    action: "",   // e.g. "https://docs.google.com/forms/d/e/1FAIpQL.../formResponse"
+    name: "",     // e.g. "entry.123456789"
+    attending: "",
+    kids: "",
+    adults: "",
+    message: "",
+    guest: ""     // optional: the name from the guest's personal link
+  }
 };
 /* Photo and logo live in assets/zian-photo.webp and assets/zian-logo.webp */
 /* ----------------------------------------------- */
@@ -1112,7 +1129,33 @@ function gridSlot(name) {
   for (const ch of name) h = (h * 31 + ch.codePointAt(0)) >>> 0;
   return pad(h % 24 + 1);
 }
-function showPass(v, celebrate) {
+// Sends the RSVP straight to the host's Google Form. Returns false when no form is set up or the send fails,
+// and the guest then gets the one-tap send buttons instead.
+async function sendToHost(v) {
+  const f = PARTY.rsvpForm || {};
+  if (!f.action || !f.name) return false;
+  const body = new URLSearchParams();
+  const add = (key, val) => { if (key) body.append(key, String(val)); };
+  add(f.name, v.name);
+  add(f.attending, v.yes ? "Yes" : "No");
+  add(f.kids, v.yes ? v.kids : 0);
+  add(f.adults, v.yes ? v.adults : 0);
+  add(f.message, v.note);
+  add(f.guest, guest);
+  const ctrl = typeof AbortController === "function" ? new AbortController() : null;
+  const timer = setTimeout(() => { if (ctrl) ctrl.abort(); }, 8000);
+  try {
+    // Google Forms does not answer cross-site reads, so the reply is opaque; reaching the server counts as sent
+    await fetch(f.action, { method: "POST", mode: "no-cors", body, signal: ctrl ? ctrl.signal : undefined });
+    return true;
+  } catch (e) {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function showPass(v, celebrate, sent) {
   $("#pass-title").textContent = v.yes ? "Pit pass" : "Spectator note";
   $("#pass-slot").textContent = v.yes ? `Grid slot ${gridSlot(v.name)}` : "Sitting this one out";
   $("#pass-name").textContent = v.name;
@@ -1131,6 +1174,12 @@ function showPass(v, celebrate) {
   ms.hidden = !PARTY.messenger;
   ms.href = `https://m.me/${enc(PARTY.messenger)}`;
   $("#sms-link").href = `sms:${PARTY.phone.replace(/[^\d+]/g, "")}?&body=${enc(msg)}`;
+  const step = $("#pass-step");
+  step.classList.toggle("sent", !!sent);
+  step.textContent = sent
+    ? (v.yes ? `Sent! ${PARTY.host} has your answer. See you at the race!` : `Sent! ${PARTY.host} has your answer. Thank you for letting us know.`)
+    : `Last step: tap an app to send this to ${PARTY.host}. The message is already written, so just press send.`;
+  $("#send-box").hidden = !!sent;
   form.hidden = true;
   pass.hidden = false;
   if (celebrate) {
@@ -1144,8 +1193,10 @@ function showPass(v, celebrate) {
   }
 }
 
-form.addEventListener("submit", e => {
+let sending = false;
+form.addEventListener("submit", async e => {
   e.preventDefault();
+  if (sending) return;
   const v = collect();
   err.hidden = true;
   if (!v.name) {
@@ -1159,9 +1210,17 @@ form.addEventListener("submit", e => {
     err.hidden = false;
     return;
   }
-  store.set({ ...v, done: true });
+  const submitBtn = $("#submit-btn");
+  sending = true;
+  submitBtn.setAttribute("aria-busy", "true");
+  submitBtn.textContent = "Sending…";
+  const sent = await sendToHost(v);
+  sending = false;
+  submitBtn.removeAttribute("aria-busy");
+  syncAttend();
+  store.set({ ...v, done: true, sent });
   if (v.yes) Sound.beep(880, 0.2);
-  showPass(v, true);
+  showPass(v, true, sent);
 });
 
 $("#edit-btn").addEventListener("click", () => {
@@ -1243,7 +1302,7 @@ if (saved && typeof saved === "object") {
 if (guest && !nameIn.value.trim()) nameIn.value = guest;
 syncSteps();
 syncAttend();
-if (saved && saved.done && saved.name) showPass(collect(), false);
+if (saved && saved.done && saved.name) showPass(collect(), false, !!saved.sent);
 </script>
 </body>
 </html>
