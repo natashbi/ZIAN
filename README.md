@@ -9,7 +9,7 @@ What guests can do:
 - Tap Zian's photo to see it bigger
 - See the ceremony and reception details, the Ninongs and Ninangs, and a live countdown to the ceremony
 - Add the event to Google Calendar, or open directions to the church and the reception in Google Maps
-- RSVP: type their name, set how many are coming, tap **Coming!** or **Can't make it**, then **Send on Messenger** (the message is copied for them, so they paste it and send)
+- RSVP: type their name, set how many are coming, tap **Coming!** or **Can't make it**, then **Copy message** and paste it to the family on Messenger
 
 ## Edit the event details
 
@@ -30,14 +30,12 @@ const PARTY = {
     end: "",                 // optional; without it only the start time shows
     place: "Lety's Place Private Pool and Event Center\nPurok 2, Brgy. Sto. Rosario Young, Zaragoza, Nueva Ecija\nAt the back of GM Blu Carwash",
     map: "Lety's Place Private Pool and Event Center, Zaragoza, Nueva Ecija"
-  },
-  messenger: ""              // the family's Messenger username (after facebook.com/ or m.me/)
+  }
 };
 ```
 
 - `place` is what the invite shows (`\n` starts a new line); `map` is what Google Maps searches for.
 - The weekday, calendar entry, directions, countdown and RSVP message are all worked out from these values.
-- With `messenger` set, **Send on Messenger** opens the family's chat directly. Left empty, it opens the Messenger app and guests pick the chat.
 
 The Ninongs and Ninangs are listed directly in the HTML, in the section with the heading "Ninongs & Ninangs".
 

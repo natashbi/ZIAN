@@ -275,7 +275,6 @@ body{
 .perf{margin-inline:-16px;border-top:3px dashed var(--ink);opacity:.35}
 .pass-step{margin:0;font-weight:700}
 .pass-step:focus{outline:none}
-.ms-bolt{fill:var(--card)}
 .backup{display:flex;flex-direction:column;gap:12px}
 .pass-msg{margin:0;padding:12px 14px;border-radius:12px;background:var(--field);font-weight:600;line-height:1.35;user-select:text;-webkit-user-select:text}
 .linkish{align-self:flex-start;padding:4px 0;border:0;background:none;color:var(--ink);font:700 var(--t-md) var(--font-body);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
@@ -582,12 +581,12 @@ At the back of GM Blu Carwash</span></dd></div>
       <p class="pass-name" id="pass-name">Natasha and Family</p>
       <p class="pass-line" id="pass-line">1 racer · 1 pit crew</p>
       <div class="perf" aria-hidden="true"></div>
-      <p class="pass-step" id="pass-step" tabindex="-1">Last step: tap Send on Messenger, then paste your message and send it.</p>
-      <div class="backup" id="backup">
-        <a class="btn btn-blue" id="ms-link" href="https://m.me/" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5C6.7 2.5 2.5 6.4 2.5 11.3c0 2.6 1.2 4.9 3.1 6.5v3.7l3.4-1.9c.9.3 1.9.4 3 .4 5.3 0 9.5-3.9 9.5-8.7S17.3 2.5 12 2.5z" fill="currentColor"/><path class="ms-bolt" d="M6.6 14.1l3.6-3.8 2.3 1.8 3.9-3.8-3.6 3.8-2.3-1.8z"/></svg>
-          Send on Messenger
-        </a>
+      <p class="pass-step" id="pass-step" tabindex="-1">Last step: tap Copy message, then paste it in Messenger and send it to the family.</p>
+      <div class="backup">
+        <button class="btn btn-blue" id="copy-btn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8.5" y="8.5" width="11" height="12" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 8.5V6.2a2.2 2.2 0 0 0-2.2-2.2H6.7a2.2 2.2 0 0 0-2.2 2.2v8.6a2.2 2.2 0 0 0 2.2 2.2h1.8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <span id="copy-label">Copy message</span>
+        </button>
         <p class="pass-msg" id="pass-msg"></p>
       </div>
       <button class="linkish" id="edit-btn" type="button">Change my answer</button>
@@ -647,10 +646,7 @@ const PARTY = {
     end: "",   // optional, e.g. "2026-11-07T16:00:00+08:00"; without it the invite shows only the start time
     place: "Lety's Place Private Pool and Event Center\nPurok 2, Brgy. Sto. Rosario Young, Zaragoza, Nueva Ecija\nAt the back of GM Blu Carwash",
     map: "Lety's Place Private Pool and Event Center, Zaragoza, Nueva Ecija"
-  },
-  // Guests answer in the Messenger app. Put the family's Messenger username here (the part after
-  // facebook.com/ or m.me/) so the button opens their chat directly; with "" it opens Messenger and guests pick the chat.
-  messenger: ""
+  }
 };
 /* Photo and logo live in assets/zian-photo.webp and assets/zian-logo.webp */
 /* ----------------------------------------------- */
@@ -1048,7 +1044,7 @@ photoBox.addEventListener("click", e => {
 });
 photoBox.addEventListener("close", () => document.body.append($("#confetti")));
 
-/* RSVP: guests pick an answer with one tap, then send it in the Messenger app */
+/* RSVP: guests pick an answer with one tap, copy the ready-made message, and send it on Messenger themselves */
 const RSVP_KEY = KEY + "-rsvp" + (guest ? "-" + guest.toLowerCase().replace(/\W+/g, "-") : "");
 const store = {
   get() { try { return JSON.parse(localStorage.getItem(RSVP_KEY)); } catch (e) { return null; } },
@@ -1097,13 +1093,6 @@ function gridSlot(name) {
   return pad(h % 24 + 1);
 }
 
-// Always a normal https link: phones hand m.me links to the Messenger app (or the website if it isn't installed).
-// App-only links like fb-messenger:// show an error page in Android Chrome, so they are never used.
-const msLink = $("#ms-link");
-msLink.href = PARTY.messenger ? `https://m.me/${enc(PARTY.messenger)}` : "https://m.me/";
-msLink.target = "_blank";
-msLink.rel = "noopener";
-
 function showPass(v, celebrate) {
   $("#pass-title").textContent = v.yes ? "Pit pass" : "Spectator note";
   $("#pass-slot").textContent = v.yes ? `Grid slot ${gridSlot(v.name)}` : "Sitting this one out";
@@ -1111,9 +1100,7 @@ function showPass(v, celebrate) {
   $("#pass-line").textContent = v.yes ? `${v.count} ${v.count === 1 ? "guest" : "guests"} coming` : "Can't make it this time";
   $("#pass-msg").textContent = message(v);
   const step = $("#pass-step");
-  step.textContent = PARTY.messenger
-    ? "Last step: tap Send on Messenger, then paste your message and send it."
-    : "Last step: tap Send on Messenger, open the family's chat, then paste your message and send it.";
+  $("#copy-label").textContent = "Copy message";
   form.hidden = true;
   pass.hidden = false;
   if (celebrate) {
@@ -1167,18 +1154,23 @@ function selectText(el) {
   sel.removeAllRanges();
   sel.addRange(range);
 }
-// Messenger can't pre-fill a message, so the tap copies it on the way; this must run inside the tap
-msLink.addEventListener("click", () => {
+// Only copies: the guest stays on the invite, then opens Messenger and pastes. Must run inside the tap.
+$("#copy-btn").addEventListener("click", () => {
   const msgEl = $("#pass-msg");
-  const done = "Message copied. Paste it in Messenger and send.";
+  const copied = () => {
+    $("#copy-label").textContent = "Copied ✓";
+    toast("Message copied. Open Messenger, paste it and send it to the family.");
+    buzz(15);
+  };
   const fallback = () => {
     selectText(msgEl);
     let ok = false;
     try { ok = document.execCommand("copy"); } catch (e) {}
-    toast(ok ? done : "Message selected. Copy it, then paste it in Messenger.");
+    if (ok) copied();
+    else toast("Message selected. Tap Copy, then paste it in Messenger.");
   };
   if (!navigator.clipboard || !navigator.clipboard.writeText) return fallback();
-  navigator.clipboard.writeText(msgEl.textContent).then(() => toast(done), fallback);
+  navigator.clipboard.writeText(msgEl.textContent).then(copied, fallback);
 });
 
 /* Sections give a small lift as they scroll into view (they are visible before that) */
