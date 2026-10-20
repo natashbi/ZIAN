@@ -45,6 +45,7 @@ With a Google Form connected, guests only tap **Submit**: their answer goes stra
 3. In **Settings**, turn off anything that requires guests to sign in or collect email addresses.
 4. In the **Responses** tab, open the ⋮ menu and turn on **Get email notifications for new responses**. You can also link the responses to a Google Sheet.
 5. Fill in `PARTY.rsvpForm` in `index.html`: `action` is the form address ending in `/formResponse`, and each question needs its `entry.…` number (shown in the form's "Get pre-filled link" URL).
+6. Before sharing, send one test RSVP from the live link and check that it appears under **Responses**. The page can't see Google's reply, so a form that needs sign-in or has the wrong entry numbers would drop answers quietly. After "Sent!", guests can still tap "Send it on Viber or WhatsApp too" as a backup.
 
 Automatic sending works when the invite is on a normal website such as GitHub Pages. The claude.ai preview link blocks pages from sending data out, so there the send buttons appear instead.
 

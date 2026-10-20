@@ -47,6 +47,8 @@
   --stop:#ff3030;
   --go:#26e36a;
   --wa:#13803f;
+  --series:#ffdc4a;
+  --field-line:#8a94ac;
   --viber:#665cac;
   --focus:var(--card);
 
@@ -55,12 +57,16 @@
 
   --t-xs:.8125rem; --t-sm:.9375rem; --t-md:1.125rem; --t-lg:1.375rem; --t-xl:1.875rem; --t-2xl:2.75rem;
 
-  color-scheme:light;
+  color-scheme:only light;
+  scroll-padding-bottom:64px;
   background:var(--paper);
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
 *,*::before,*::after{box-sizing:border-box}
+/* Nothing may widen the phone's layout (mobile browsers zoom the page out when content overflows) */
+html,body{overflow-x:clip}
+@supports not (overflow:clip){html{overflow-x:hidden}}
 [hidden]{display:none!important}
 body{
   margin:0;background:var(--paper);color:var(--ink);
@@ -95,14 +101,14 @@ body{
   display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
 }
 .invitee{margin:0;display:flex;flex-direction:column;align-items:center;gap:4px;max-width:100%}
-.invitee-l{font-size:var(--t-xs);font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--chrome-dim)}
+.invitee-l{font-size:var(--t-xs);font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--chrome-2)}
 .invitee-n{max-width:100%;padding:0 12px 3px;border-bottom:2px solid var(--flame-yellow);font-family:var(--font-display);font-size:var(--t-xl);line-height:1.1;color:var(--chrome);overflow-wrap:anywhere}
 .invitee-n.is-empty{border-bottom-style:dashed;color:var(--chrome-dim)}
 
 .title{margin:0;width:100%;display:flex;justify-content:center}
 .logo{display:block;width:min(94%,340px);height:auto;filter:drop-shadow(0 6px 10px var(--shade))}
 .name-text{font-family:var(--font-display);font-weight:400;font-size:clamp(4rem,23vw,6rem);line-height:.95;color:var(--flame-yellow);text-shadow:4px 4px 0 var(--flame-red),8px 8px 0 var(--flame-red-deep)}
-.series{margin:-8px 0 0;font-weight:800;font-size:var(--t-xs);letter-spacing:.34em;text-transform:uppercase;color:var(--flame-yellow)}
+.series{margin:-8px 0 0;font-weight:800;font-size:var(--t-xs);letter-spacing:.34em;text-transform:uppercase;color:var(--series)}
 
 .blister-wrap{position:relative;width:100%}
 .blister{
@@ -120,6 +126,7 @@ body{
 .light{width:14px;height:14px;border-radius:50%;background:var(--asphalt-2);transition:background .12s,box-shadow .12s}
 .light.on{background:var(--stop);box-shadow:0 0 10px 2px var(--stop)}
 .light.go.on{background:var(--go);box-shadow:0 0 12px 3px var(--go)}
+@media (max-width:379px){.lights{top:10px;left:12px;gap:5px;padding:5px 7px}.light{width:10px;height:10px}}
 
 /* Zian in the blister: photo in a redline tire, flames behind */
 .hero{position:absolute;left:50%;top:3%;z-index:1;width:58%;max-width:100%;aspect-ratio:1;transform:translateX(-50%)}
@@ -179,7 +186,7 @@ body{
 .badge{position:absolute;top:-8px;right:-6px;z-index:6;width:76px;height:76px;border-radius:50%;display:grid;place-content:center;rotate:12deg;background:var(--flame-yellow);color:var(--flame-red);border:3px solid var(--flame-red);font-family:var(--font-display);line-height:.9;box-shadow:0 6px 12px var(--shade)}
 .badge small{display:block;font-family:var(--font-body);font-weight:800;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
 .badge b{font-size:1.9rem;font-weight:400}
-.tap-hint{margin:-6px 0 0;font-size:var(--t-sm);font-weight:600;color:var(--chrome-dim);text-wrap:balance}
+.tap-hint{margin:-6px 0 0;font-size:var(--t-sm);font-weight:600;color:var(--chrome-2);text-wrap:balance}
 
 .hello{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
 .turning{margin:0;font-weight:800;font-size:var(--t-lg);letter-spacing:.14em;text-transform:uppercase}
@@ -203,11 +210,11 @@ body{
 .fine{margin:14px 0 0;font-size:var(--t-xs);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--chrome-dim);text-align:left}
 
 /* Card back panels */
-.panel{--focus:var(--card);color-scheme:light;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:22px;padding:22px 18px;display:flex;flex-direction:column;gap:16px}
+.panel{--focus:var(--card);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:22px;padding:22px 18px;display:flex;flex-direction:column;gap:16px}
 .panel-h{margin:0;display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:400;font-size:var(--t-xl);line-height:1;color:var(--card)}
 .panel-h::before{content:"";flex:none;width:26px;height:20px;border:2px solid var(--ink);border-radius:2px;background:repeating-conic-gradient(var(--ink) 0 25%,var(--chrome) 0 50%) 0 0/10px 10px}
 .panel-sub{margin:-8px 0 0;color:var(--ink-soft);font-weight:600}
-.date-row{display:flex;align-items:center;gap:14px}
+.date-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
 .date-day{font-family:var(--font-display);font-size:4.6rem;line-height:.85;color:var(--flame-red);text-shadow:3px 3px 0 var(--flame-yellow)}
 .date-words{display:flex;flex-direction:column;gap:4px;min-width:0;font-weight:800;text-transform:uppercase;line-height:1}
 .date-words .wd{font-size:var(--t-xl);letter-spacing:.06em;color:var(--card)}
@@ -233,7 +240,7 @@ body{
 .sponsors .ninong{color:var(--card)}
 .sponsors .ninang{color:var(--flame-red-deep)}
 .sponsors ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
-.sponsors li{font-weight:700;font-size:var(--t-md);line-height:1.2;overflow-wrap:anywhere}
+.sponsors li{font-weight:700;font-size:clamp(1rem,5.3vw,var(--t-md));line-height:1.2;overflow-wrap:anywhere}
 .btn-red{width:100%;min-height:56px;font-size:var(--t-lg);background:var(--flame-red);color:var(--chrome);box-shadow:0 5px 0 var(--flame-red-deep);transition:transform .08s,box-shadow .08s}
 .btn-red:active{transform:translateY(3px);box-shadow:0 2px 0 var(--flame-red-deep)}
 
@@ -254,7 +261,7 @@ body{
 .field{display:flex;flex-direction:column;gap:6px}
 .lbl{padding:0;font-size:var(--t-sm);font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
 .opt{font-weight:600;letter-spacing:0;text-transform:none}
-.input{width:100%;min-height:50px;padding:10px 14px;border-radius:12px;border:2px solid var(--chrome-2);background:var(--field);color:var(--ink);font:600 var(--t-md)/1.3 var(--font-body)}
+.input{width:100%;min-height:50px;padding:10px 14px;border-radius:12px;border:2px solid var(--field-line);background:var(--field);color:var(--ink);font:600 var(--t-md)/1.3 var(--font-body)}
 .input::placeholder{color:var(--ink-faint);opacity:1}
 .input:focus{outline:none;border-color:var(--card);box-shadow:0 0 0 4px var(--ring)}
 textarea.input{min-height:78px;resize:vertical}
@@ -278,12 +285,12 @@ textarea.input{min-height:78px;resize:vertical}
 @keyframes bump{from{transform:scale(1.35)}}
 .err{margin:0;font-weight:700;color:var(--flame-red-deep)}
 
-.pass{--focus:var(--ink);position:relative;overflow:hidden;display:flex;flex-direction:column;gap:12px;padding:0 16px 18px;border-radius:18px;background:var(--flame-yellow);color:var(--ink)}
+.pass{--focus:var(--ink);position:relative;transform-origin:50% 0;scroll-margin-top:12px;overflow:hidden;display:flex;flex-direction:column;gap:12px;padding:0 16px 18px;border-radius:18px;background:var(--flame-yellow);color:var(--ink)}
 .pass.show{animation:pass-in .55s cubic-bezier(.2,1.2,.4,1)}
 @keyframes pass-in{from{transform:perspective(600px) rotateX(-60deg) translateY(20px);opacity:0}}
 .pass .checker{margin-inline:-16px}
 .pass-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;font-weight:800;font-size:var(--t-sm);letter-spacing:.16em;text-transform:uppercase}
-.pass-name{margin:0;font-family:var(--font-display);font-size:clamp(1.75rem,11vw,2.5rem);line-height:.95;color:var(--flame-red-deep);overflow-wrap:anywhere}
+.pass-name{margin:0;font-family:var(--font-display);font-size:clamp(1.5rem,10vw,2.5rem);line-height:.95;color:var(--flame-red-deep);overflow-wrap:anywhere}
 .pass-line{margin:0;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
 .perf{margin-inline:-16px;border-top:3px dashed var(--ink);opacity:.35}
 .pass-step{margin:0;font-weight:700}
@@ -302,7 +309,7 @@ textarea.input{min-height:78px;resize:vertical}
 .foot p{margin:0;font-family:var(--font-display);font-size:var(--t-lg);color:var(--card)}
 
 /* Photo pop-up */
-.photo-box{width:min(88vw,380px);max-width:100%;padding:22px 18px 18px;border:0;border-radius:24px;background:var(--card);color:var(--chrome);text-align:center;box-shadow:0 24px 60px var(--shadow)}
+.photo-box{--focus:var(--flame-yellow);width:min(88vw,380px);max-width:100%;padding:22px 18px 18px;border:0;border-radius:24px;background:var(--card);color:var(--chrome);text-align:center;box-shadow:0 24px 60px var(--shadow)}
 .photo-box::backdrop{background:rgba(13,19,36,.6)}
 .box-tire{position:relative;width:min(100%,300px);max-width:100%;aspect-ratio:1;margin-inline:auto}
 .box-tire .tire::before{inset:11px;border-width:4px}
@@ -329,10 +336,8 @@ textarea.input{min-height:78px;resize:vertical}
 .pennants-in .pennant{animation:drop .6s cubic-bezier(.2,1.3,.4,1) backwards,sway 3.2s ease-in-out .6s infinite alternate}
 .bunting .pennant{animation-delay:calc(var(--i) * .05s),calc(var(--i) * -.35s)}
 @keyframes drop{from{transform:translateY(-50px)}}
-.pennant.flip{animation:flip .6s ease-in-out}
-@keyframes flip{from{transform:translateY(calc(var(--sag) * 1px)) rotateY(0)}to{transform:translateY(calc(var(--sag) * 1px)) rotateY(360deg)}}
 .package{animation:hang .7s cubic-bezier(.2,1.2,.4,1) .1s backwards}
-@keyframes hang{from{transform:translateY(-28px) rotate(-2deg);opacity:0}}
+@keyframes hang{from{transform:translateY(-28px) rotate(-.5deg);opacity:0}}
 .hero .fire{animation:ignite .6s cubic-bezier(.2,1.2,.4,1) .55s backwards}
 @keyframes ignite{from{transform:translateY(15%) scale(.3);opacity:0}}
 .photo-btn{animation:pop .5s cubic-bezier(.2,1.5,.4,1) .75s backwards}
@@ -398,7 +403,7 @@ textarea.input{min-height:78px;resize:vertical}
               </defs>
               <g transform="translate(-40 30) scale(.82)"><use href="#flame-shape" class="flame f3" fill="url(#fire)"/></g>
               <g transform="translate(240 30) scale(-.82 .82)"><use href="#flame-shape" class="flame f2" fill="url(#fire)"/></g>
-              <g transform="translate(-6 -18) scale(1.06)"><use href="#flame-shape" class="flame" fill="url(#fire)"/></g>
+              <g transform="translate(4 0) scale(.96)"><use href="#flame-shape" class="flame" fill="url(#fire)"/></g>
               <g transform="translate(35 70) scale(.65)"><use href="#flame-shape" class="flame f2" fill="url(#fire-core)"/></g>
             </svg>
             <button class="photo-btn" id="photo-btn" type="button" aria-label="See a bigger photo of Zian">
@@ -536,7 +541,7 @@ textarea.input{min-height:78px;resize:vertical}
     <div class="sponsors">
       <div>
         <h3 class="ninong">Ninong</h3>
-        <ul>
+        <ul role="list">
           <li>Jerald Paul Duque</li>
           <li>Adrian Tafalla</li>
           <li>Christian Romen</li>
@@ -546,7 +551,7 @@ textarea.input{min-height:78px;resize:vertical}
       </div>
       <div>
         <h3 class="ninang">Ninang</h3>
-        <ul>
+        <ul role="list">
           <li>Aileen Tafalla</li>
           <li>Hazel Zapatero</li>
           <li>Mariel Enoc</li>
@@ -622,14 +627,15 @@ textarea.input{min-height:78px;resize:vertical}
       <p class="pass-line" id="pass-line">1 racer · 1 pit crew</p>
       <div class="perf" aria-hidden="true"></div>
       <p class="pass-step" id="pass-step" tabindex="-1">Last step: tap an app to send this to <span data-bind="host">Amy</span>.</p>
+      <button class="linkish" id="resend-btn" type="button" hidden>Want to be sure? Send it on Viber or WhatsApp too</button>
       <div class="send-box" id="send-box">
-        <p class="pass-msg" id="pass-msg"></p>
         <div class="actions">
           <a class="btn btn-viber" id="viber-link" href="viber://chat">Send on Viber</a>
           <a class="btn btn-wa" id="wa-link" href="https://wa.me/" target="_blank" rel="noopener">Send on WhatsApp</a>
           <a class="btn btn-blue" id="ms-link" href="https://m.me/" target="_blank" rel="noopener">Send on Messenger</a>
           <a class="btn btn-line" id="sms-link" href="sms:">Send as text message</a>
         </div>
+        <p class="pass-msg" id="pass-msg"></p>
         <p class="pass-fine">Nothing opened? <button class="linkish" id="copy-btn" type="button">Copy the message</button> and send it to <span data-bind="host">Amy</span> at <span class="sel" data-bind="phone">123.123.1234</span>.</p>
       </div>
       <button class="linkish" id="edit-btn" type="button">Change my answer</button>
@@ -647,7 +653,7 @@ textarea.input{min-height:78px;resize:vertical}
     <span class="tire" aria-hidden="true"></span>
     <span class="disc">
       <span class="initial" aria-hidden="true" data-bind="initial">Z</span>
-      <img src="assets/zian-photo.webp" alt="" width="760" height="760" onerror="this.hidden=true">
+      <img src="assets/zian-photo.webp" id="box-photo" alt="Zian, the birthday racer" width="760" height="760" onerror="this.hidden=true">
     </span>
   </div>
   <p class="box-cap" id="box-cap">Happy birthday, <span data-bind="name">Zian</span>!</p>
@@ -709,7 +715,12 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
 const enc = encodeURIComponent;
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 // A short buzz on phones that support it (Android); silently does nothing elsewhere
-const buzz = pattern => { try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {} };
+const buzz = pattern => {
+  try {
+    // Browsers refuse vibration until the guest has tapped the page
+    if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(pattern);
+  } catch (e) {}
+};
 const KEY = PARTY.name.toLowerCase().replace(/\W+/g, "-") + "-invite";
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -734,6 +745,7 @@ const bind = {
 };
 $$("[data-bind]").forEach(el => { const v = bind[el.dataset.bind]; if (v != null) el.textContent = v; });
 document.title = `${PARTY.name}'s Birthday Race`;
+$("#box-photo").alt = `${PARTY.name}, the birthday racer`;
 
 /* Who is invited: read from ?to=Name or #Name-With-Dashes, else show the placeholder */
 function readInvitee() {
@@ -1048,28 +1060,27 @@ function fling(dir, from) {
   carBtn.addEventListener("pointercancel", end);
 }
 
-/* Tap a pennant to flip it */
-$$(".pennant").forEach(p => {
-  p.addEventListener("pointerdown", () => {
-    p.classList.remove("flip");
-    void p.offsetWidth;
-    p.classList.add("flip");
-    buzz(8);
-  });
-  p.addEventListener("animationend", e => { if (e.animationName === "flip") p.classList.remove("flip"); });
-});
+/* Tap a pennant to flip it (a script animation, so the opening drop never replays) */
+$$(".pennant").forEach(p => p.addEventListener("click", () => {
+  buzz(8);
+  if (reduceMotion.matches || !p.animate) return;
+  const y = `translateY(${getComputedStyle(p).getPropertyValue("--sag").trim()}px)`;
+  p.animate([{ transform: `${y} rotateY(0)` }, { transform: `${y} rotateY(360deg)` }], { duration: 600, easing: "ease-in-out" });
+}));
 
 /* Photo up close */
 const photoBox = $("#photo-box");
 $("#photo-btn").addEventListener("click", () => {
   if (typeof photoBox.showModal === "function") photoBox.showModal();
   else photoBox.setAttribute("open", "");
+  photoBox.append($("#confetti"));
   buzz(15);
   setTimeout(() => burstFrom($(".box-tire"), 90), 120);
 });
 const closePhoto = () => { if (typeof photoBox.close === "function") photoBox.close(); else photoBox.removeAttribute("open"); };
 $("#photo-close").addEventListener("click", closePhoto);
 photoBox.addEventListener("click", e => { if (e.target === photoBox) closePhoto(); });
+photoBox.addEventListener("close", () => document.body.append($("#confetti")));
 
 /* RSVP */
 const RSVP_KEY = KEY + "-rsvp" + (guest ? "-" + guest.toLowerCase().replace(/\W+/g, "-") : "");
@@ -1180,13 +1191,14 @@ function showPass(v, celebrate, sent) {
     ? (v.yes ? `Sent! ${PARTY.host} has your answer. See you at the race!` : `Sent! ${PARTY.host} has your answer. Thank you for letting us know.`)
     : `Last step: tap an app to send this to ${PARTY.host}. The message is already written, so just press send.`;
   $("#send-box").hidden = !!sent;
+  $("#resend-btn").hidden = !sent;
   form.hidden = true;
   pass.hidden = false;
   if (celebrate) {
     pass.classList.remove("show");
     void pass.offsetWidth;
     pass.classList.add("show");
-    $("#rsvp").scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
+    pass.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
     $("#pass-step").focus({ preventScroll: true });
     buzz(v.yes ? [30, 40, 60] : 20);
     if (v.yes) setTimeout(() => burstFrom($("#pass-name"), 100), 350);
@@ -1221,6 +1233,11 @@ form.addEventListener("submit", async e => {
   store.set({ ...v, done: true, sent });
   if (v.yes) Sound.beep(880, 0.2);
   showPass(v, true, sent);
+});
+
+$("#resend-btn").addEventListener("click", () => {
+  $("#send-box").hidden = false;
+  $("#resend-btn").hidden = true;
 });
 
 $("#edit-btn").addEventListener("click", () => {
@@ -1289,6 +1306,9 @@ function lapUpdate() {
 addEventListener("scroll", () => { if (!lapRaf) lapRaf = requestAnimationFrame(lapUpdate); }, { passive: true });
 addEventListener("resize", () => { if (!lapRaf) lapRaf = requestAnimationFrame(lapUpdate); });
 lapUpdate();
+if ("ResizeObserver" in window) {
+  new ResizeObserver(() => { if (!lapRaf) lapRaf = requestAnimationFrame(lapUpdate); }).observe(document.body);
+}
 
 /* Restore this guest's RSVP */
 const saved = store.get();
