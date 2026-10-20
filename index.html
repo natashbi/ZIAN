@@ -46,10 +46,8 @@
   --led-glow:rgba(255,210,31,.45);
   --stop:#ff3030;
   --go:#26e36a;
-  --wa:#13803f;
   --series:#ffdc4a;
   --field-line:#8a94ac;
-  --viber:#665cac;
   --focus:var(--card);
 
   --font-display:"Racing Sans One","Arial Black",Impact,system-ui,sans-serif;
@@ -199,13 +197,7 @@ body{
 .btn-sound svg{width:26px;height:26px}
 .btn-sound[aria-pressed="false"]{color:var(--chrome-dim);border-color:var(--gloss-soft)}
 
-.plate{align-self:stretch;margin-inline:-18px;margin-top:4px;background:var(--card-deep);padding:0 18px 20px}
-.plate .checker{margin-inline:-18px}
-.specs{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;margin:16px 0 0;text-align:left}
-.specs div{min-width:0;border-top:2px solid var(--gloss-soft);padding-top:8px}
-.specs dt{font-size:var(--t-xs);font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--flame-yellow)}
-.specs dd{margin:2px 0 0;font-weight:700;font-size:var(--t-md);color:var(--chrome)}
-.fine{margin:14px 0 0;font-size:var(--t-xs);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--chrome-dim);text-align:left}
+.card-edge{align-self:stretch;margin:4px -18px 0}
 
 /* Card back panels */
 .panel{--focus:var(--card);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:22px;padding:22px 18px;display:flex;flex-direction:column;gap:16px}
@@ -222,15 +214,12 @@ body{
 .facts dt{padding-top:3px;font-size:var(--t-xs);font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
 .facts dd{margin:0;min-width:0;font-weight:700;font-size:var(--t-md);overflow-wrap:anywhere}
 .facts .place{display:block;margin-top:2px;font-weight:600;color:var(--ink-soft);white-space:pre-line}
-.sel{user-select:all;-webkit-user-select:all;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
 
 .actions{display:grid;grid-template-columns:1fr;gap:10px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:10px 16px;border-radius:14px;border:2px solid transparent;font:800 var(--t-md)/1.1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;text-align:center;cursor:pointer}
 .btn svg{flex:none;width:20px;height:20px}
 .btn-blue{background:var(--card);color:var(--chrome)}
 .btn-line{background:var(--field);color:var(--card);border-color:var(--card)}
-.btn-wa{background:var(--wa);color:var(--chrome)}
-.btn-viber{background:var(--viber);color:var(--chrome)}
 
 /* Godparents */
 .sponsors{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -294,13 +283,8 @@ textarea.input{min-height:78px;resize:vertical}
 .perf{margin-inline:-16px;border-top:3px dashed var(--ink);opacity:.35}
 .pass-step{margin:0;font-weight:700}
 .pass-step:focus{outline:none}
-.pass-step.sent{display:flex;align-items:center;gap:10px;font-size:var(--t-lg);line-height:1.2}
-.pass-step.sent::before{content:"✓";flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:var(--wa);color:var(--chrome);font-size:1.2rem}
-.send-box{display:flex;flex-direction:column;gap:12px}
-.btn[aria-busy="true"]{opacity:.75;cursor:progress}
+.ms-bolt{fill:var(--card)}
 .pass-msg{margin:0;padding:12px 14px;border-radius:12px;background:var(--field);font-weight:600;line-height:1.35;user-select:text;-webkit-user-select:text}
-.pass-fine{margin:0;font-weight:600}
-.pass-fine .linkish{padding:0;font-size:inherit;vertical-align:baseline}
 .linkish{align-self:flex-start;padding:4px 0;border:0;background:none;color:var(--ink);font:700 var(--t-md) var(--font-body);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 
 .foot{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
@@ -498,16 +482,7 @@ textarea.input{min-height:78px;resize:vertical}
       </div>
       <p class="sr-only" id="race-status" aria-live="polite"></p>
 
-      <div class="plate">
-        <div class="checker" aria-hidden="true"></div>
-        <dl class="specs">
-          <div><dt>Model</dt><dd data-bind="name">Zian</dd></div>
-          <div><dt>Series</dt><dd>First Edition</dd></div>
-          <div><dt>Fuel</dt><dd>Milk &amp; cuddles</dd></div>
-          <div><dt>Pit crew</dt><dd>Ninongs &amp; Ninangs</dd></div>
-        </dl>
-        <p class="fine">Collector No. 01 · Christening Series · 1:64 scale</p>
-      </div>
+      <div class="card-edge checker" aria-hidden="true"></div>
     </article>
   </main>
 
@@ -518,11 +493,11 @@ textarea.input{min-height:78px;resize:vertical}
       <span class="date-words"><span class="wd" data-bind="weekday">Saturday</span><span class="my" data-bind="monthYear">November 2026</span></span>
     </div>
     <dl class="facts">
-      <div><dt>Ceremony</dt><dd><span data-bind="ceremonyTime">10:00 AM</span><span class="place" data-bind="church">Church details to follow</span></dd></div>
+      <div><dt>Ceremony</dt><dd><span data-bind="ceremonyTime">10:00 AM</span><span class="place" data-bind="church">St. Vincent Ferrer Parish
+Brgy. San Vicente, Zaragoza, Nueva Ecija</span></dd></div>
       <div><dt>Reception</dt><dd><span data-bind="receptionTime">12:00 PM</span><span class="place" data-bind="reception">Lety's Place Private Pool and Event Center
 Purok 2, Brgy. Sto. Rosario Young, Zaragoza, Nueva Ecija
 At the back of GM Blu Carwash</span></dd></div>
-      <div><dt>RSVP</dt><dd><span data-bind="host">Amy</span> at <span class="sel" data-bind="phone">123.123.1234</span></dd></div>
     </dl>
     <div class="actions">
       <a class="btn btn-blue" id="cal-link" href="https://calendar.google.com/" target="_blank" rel="noopener">
@@ -581,7 +556,7 @@ At the back of GM Blu Carwash</span></dd></div>
 
   <section class="panel reveal" id="rsvp" aria-labelledby="rsvp-h">
     <h2 class="panel-h" id="rsvp-h">Join the grid</h2>
-    <p class="panel-sub">Tell <span data-bind="host">Amy</span> who's racing so there's a spot for everyone.</p>
+    <p class="panel-sub">Let us know if you can make it.</p>
 
     <form class="form" id="rsvp-form" novalidate>
       <div class="field">
@@ -631,18 +606,12 @@ At the back of GM Blu Carwash</span></dd></div>
       <p class="pass-name" id="pass-name">Maya and family</p>
       <p class="pass-line" id="pass-line">1 racer · 1 pit crew</p>
       <div class="perf" aria-hidden="true"></div>
-      <p class="pass-step" id="pass-step" tabindex="-1">Last step: tap an app to send this to <span data-bind="host">Amy</span>.</p>
-      <button class="linkish" id="resend-btn" type="button" hidden>Want to be sure? Send it on Viber or WhatsApp too</button>
-      <div class="send-box" id="send-box">
-        <div class="actions">
-          <a class="btn btn-viber" id="viber-link" href="viber://chat">Send on Viber</a>
-          <a class="btn btn-wa" id="wa-link" href="https://wa.me/" target="_blank" rel="noopener">Send on WhatsApp</a>
-          <a class="btn btn-blue" id="ms-link" href="https://m.me/" target="_blank" rel="noopener">Send on Messenger</a>
-          <a class="btn btn-line" id="sms-link" href="sms:">Send as text message</a>
-        </div>
-        <p class="pass-msg" id="pass-msg"></p>
-        <p class="pass-fine">Nothing opened? <button class="linkish" id="copy-btn" type="button">Copy the message</button> and send it to <span data-bind="host">Amy</span> at <span class="sel" data-bind="phone">123.123.1234</span>.</p>
-      </div>
+      <p class="pass-step" id="pass-step" tabindex="-1">Last step: tap Send on Messenger, then paste your message and send it.</p>
+      <a class="btn btn-blue" id="ms-link" href="fb-messenger://">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5C6.7 2.5 2.5 6.4 2.5 11.3c0 2.6 1.2 4.9 3.1 6.5v3.7l3.4-1.9c.9.3 1.9.4 3 .4 5.3 0 9.5-3.9 9.5-8.7S17.3 2.5 12 2.5z" fill="currentColor"/><path class="ms-bolt" d="M6.6 14.1l3.6-3.8 2.3 1.8 3.9-3.8-3.6 3.8-2.3-1.8z"/></svg>
+        Send on Messenger
+      </a>
+      <p class="pass-msg" id="pass-msg"></p>
       <button class="linkish" id="edit-btn" type="button">Change my answer</button>
     </div>
   </section>
@@ -692,8 +661,8 @@ const PARTY = {
   // map: what Google Maps searches for; leave "" to search for the place itself
   ceremony: {
     start: "2026-11-07T10:00:00+08:00",
-    place: "",
-    map: ""
+    place: "St. Vincent Ferrer Parish\nBrgy. San Vicente, Zaragoza, Nueva Ecija",
+    map: "St. Vincent Ferrer Parish, Zaragoza, Nueva Ecija"
   },
   reception: {
     start: "2026-11-07T12:00:00+08:00",
@@ -701,22 +670,9 @@ const PARTY = {
     place: "Lety's Place Private Pool and Event Center\nPurok 2, Brgy. Sto. Rosario Young, Zaragoza, Nueva Ecija\nAt the back of GM Blu Carwash",
     map: "Lety's Place Private Pool and Event Center, Zaragoza, Nueva Ecija"
   },
-  host: "Amy",
-  phone: "123.123.1234",   // shown on the invite and used by "Send as text"
-  whatsapp: "11231231234", // country code + number, digits only; "" hides the WhatsApp button
-  viber: "+11231231234",   // number with country code, e.g. "+639171234567"; "" hides the Viber button
-  messenger: "",           // the host's Messenger username (m.me/username); "" hides the Messenger button
-  // Automatic RSVP: answers go straight to the host's Google Form (email alert + a list in Google Sheets).
-  // Fill in the form's "formResponse" address and each question's entry number. Leave action "" to use the send buttons instead.
-  rsvpForm: {
-    action: "",   // e.g. "https://docs.google.com/forms/d/e/1FAIpQL.../formResponse"
-    name: "",     // e.g. "entry.123456789"
-    attending: "",
-    kids: "",
-    adults: "",
-    message: "",
-    guest: ""     // optional: the name from the guest's personal link
-  }
+  // Guests answer in the Messenger app. Put the family's Messenger username here (the part after
+  // facebook.com/ or m.me/) so the button opens their chat directly; with "" it opens Messenger and guests pick the chat.
+  messenger: ""
 };
 /* Photo and logo live in assets/zian-photo.webp and assets/zian-logo.webp */
 /* ----------------------------------------------- */
@@ -757,8 +713,7 @@ const eventName = `${PARTY.name}'s ${PARTY.event}`;
 const bind = {
   name: PARTY.name, initial: PARTY.name.charAt(0), day: D, weekday, monthYear: `${month} ${Y}`,
   eventName, headline: `You're invited to ${eventName}`,
-  ceremonyTime: ceremonyClock, church: churchText, receptionTime: receptionText, reception: R.place,
-  host: PARTY.host, phone: PARTY.phone
+  ceremonyTime: ceremonyClock, church: churchText, receptionTime: receptionText, reception: R.place
 };
 $$("[data-bind]").forEach(el => { const v = bind[el.dataset.bind]; if (v != null) el.textContent = v; });
 document.title = eventName;
@@ -800,7 +755,7 @@ const utc = ms => Number.isFinite(ms) ? new Date(ms).toISOString().replace(/[-:]
 $("#cal-link").href = "https://calendar.google.com/calendar/render?action=TEMPLATE"
   + `&text=${enc(eventName)}`
   + `&dates=${utc(startMs)}/${utc(endMs)}`
-  + `&details=${enc(`Ceremony: ${ceremonyClock}, ${oneLine(churchText)}. Reception: ${receptionText}, ${oneLine(R.place)}. RSVP to ${PARTY.host} at ${PARTY.phone}.`)}`
+  + `&details=${enc(`Ceremony: ${ceremonyClock}, ${oneLine(churchText)}. Reception: ${receptionText}, ${oneLine(R.place)}.`)}`
   + `&location=${enc(oneLine(C.place || R.place))}`;
 const mapsUrl = place => "https://www.google.com/maps/search/?api=1&query=" + enc(oneLine(place));
 const churchMap = C.map || C.place, receptionMap = R.map || R.place;
@@ -1059,14 +1014,14 @@ function fling(dir, from) {
   ], { duration: 1700 }).finished.catch(() => {}).then(done);
 }
 {
-  let startX = 0, dx = 0, down = false;
+  let startX = 0, dx = 0, down = false, pointer = null;
   carBtn.addEventListener("pointerdown", e => {
-    if (racing || flinging || e.button > 0) return;
-    down = true; startX = e.clientX; dx = 0; carBtn.dataset.dragged = "";
+    if (racing || flinging || down || e.button > 0) return;
+    down = true; pointer = e.pointerId; startX = e.clientX; dx = 0; carBtn.dataset.dragged = "";
     try { carBtn.setPointerCapture(e.pointerId); } catch (err) {}
   });
   carBtn.addEventListener("pointermove", e => {
-    if (!down) return;
+    if (!down || e.pointerId !== pointer) return;
     dx = e.clientX - startX;
     if (Math.abs(dx) > 8) {
       carBtn.dataset.dragged = "1";
@@ -1075,8 +1030,8 @@ function fling(dir, from) {
     }
   });
   const end = e => {
-    if (!down) return;
-    down = false;
+    if (!down || e.pointerId !== pointer) return;
+    down = false; pointer = null;
     if (carBtn.dataset.dragged && e.type === "pointerup" && Math.abs(dx) > 45) fling(Math.sign(dx), dx * 0.5);
     else { carBtn.style.transform = ""; carBtn.classList.remove("spin"); }
     if (e.type === "pointercancel") carBtn.dataset.dragged = "";
@@ -1096,18 +1051,27 @@ $$(".pennant").forEach(p => p.addEventListener("click", () => {
 /* Photo up close */
 const photoBox = $("#photo-box");
 $("#photo-btn").addEventListener("click", () => {
-  if (typeof photoBox.showModal === "function") photoBox.showModal();
-  else photoBox.setAttribute("open", "");
-  photoBox.append($("#confetti"));
+  if (typeof photoBox.showModal === "function") {
+    photoBox.showModal();
+    // The pop-up sits above everything, so the confetti canvas goes inside it while it is open
+    photoBox.append($("#confetti"));
+  } else {
+    photoBox.setAttribute("open", "");
+  }
   buzz(15);
-  setTimeout(() => burstFrom($(".box-tire"), 90), 120);
+  setTimeout(() => { if (photoBox.hasAttribute("open")) burstFrom($(".box-tire"), 90); }, 120);
 });
 const closePhoto = () => { if (typeof photoBox.close === "function") photoBox.close(); else photoBox.removeAttribute("open"); };
 $("#photo-close").addEventListener("click", closePhoto);
-photoBox.addEventListener("click", e => { if (e.target === photoBox) closePhoto(); });
+// Close on a tap on the dimmed backdrop only, not on the box's own blue frame
+photoBox.addEventListener("click", e => {
+  if (e.target !== photoBox) return;
+  const r = photoBox.getBoundingClientRect();
+  if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closePhoto();
+});
 photoBox.addEventListener("close", () => document.body.append($("#confetti")));
 
-/* RSVP */
+/* RSVP: guests answer in the Messenger app */
 const RSVP_KEY = KEY + "-rsvp" + (guest ? "-" + guest.toLowerCase().replace(/\W+/g, "-") : "");
 const store = {
   get() { try { return JSON.parse(localStorage.getItem(RSVP_KEY)); } catch (e) { return null; } },
@@ -1128,7 +1092,7 @@ function syncSteps() {
 }
 function syncAttend() {
   $("#counts").hidden = !attending();
-  $("#submit-btn").textContent = attending() ? "Get my pit pass" : `Let ${PARTY.host} know`;
+  $("#submit-btn").textContent = attending() ? "Get my pit pass" : "Send my answer";
 }
 $$(".step").forEach(b => b.addEventListener("click", () => {
   const inp = document.getElementById(b.dataset.for);
@@ -1155,8 +1119,8 @@ form.addEventListener("input", saveDraft);
 function message(v) {
   const when = `${weekday} ${D} ${month}`;
   let m = v.yes
-    ? `Hi ${PARTY.host}! ${v.name} will be at ${eventName} on ${when} (ceremony ${ceremonyClock}). Kids: ${v.kids}. Grown-ups: ${v.adults}.`
-    : `Hi ${PARTY.host}, ${v.name} can't make it to ${eventName} on ${when}. God bless ${PARTY.name}!`;
+    ? `Hi! ${v.name} will be at ${eventName} on ${when} (ceremony ${ceremonyClock}). Kids: ${v.kids}. Grown-ups: ${v.adults}.`
+    : `Hi! ${v.name} can't make it to ${eventName} on ${when}. God bless ${PARTY.name}!`;
   if (v.note) m += ` Message for ${PARTY.name}: ${v.note}`;
   return m;
 }
@@ -1165,58 +1129,27 @@ function gridSlot(name) {
   for (const ch of name) h = (h * 31 + ch.codePointAt(0)) >>> 0;
   return pad(h % 24 + 1);
 }
-// Sends the RSVP straight to the host's Google Form. Returns false when no form is set up or the send fails,
-// and the guest then gets the one-tap send buttons instead.
-async function sendToHost(v) {
-  const f = PARTY.rsvpForm || {};
-  if (!f.action || !f.name) return false;
-  const body = new URLSearchParams();
-  const add = (key, val) => { if (key) body.append(key, String(val)); };
-  add(f.name, v.name);
-  add(f.attending, v.yes ? "Yes" : "No");
-  add(f.kids, v.yes ? v.kids : 0);
-  add(f.adults, v.yes ? v.adults : 0);
-  add(f.message, v.note);
-  add(f.guest, guest);
-  const ctrl = typeof AbortController === "function" ? new AbortController() : null;
-  const timer = setTimeout(() => { if (ctrl) ctrl.abort(); }, 8000);
-  try {
-    // Google Forms does not answer cross-site reads, so the reply is opaque; reaching the server counts as sent
-    await fetch(f.action, { method: "POST", mode: "no-cors", body, signal: ctrl ? ctrl.signal : undefined });
-    return true;
-  } catch (e) {
-    return false;
-  } finally {
-    clearTimeout(timer);
-  }
-}
 
-function showPass(v, celebrate, sent) {
+// With a username the button opens the family's chat in the Messenger app (m.me opens the app on phones);
+// without one it opens the Messenger app itself and the guest picks the chat
+const msLink = $("#ms-link");
+if (PARTY.messenger) {
+  msLink.href = `https://m.me/${enc(PARTY.messenger)}`;
+  msLink.target = "_blank";
+  msLink.rel = "noopener";
+}
+$("#pass-step").textContent = PARTY.messenger
+  ? "Last step: tap Send on Messenger, then paste your message and send it."
+  : "Last step: tap Send on Messenger, open our chat, then paste your message and send it.";
+
+function showPass(v, celebrate) {
   $("#pass-title").textContent = v.yes ? "Pit pass" : "Spectator note";
   $("#pass-slot").textContent = v.yes ? `Grid slot ${gridSlot(v.name)}` : "Sitting this one out";
   $("#pass-name").textContent = v.name;
   $("#pass-line").textContent = v.yes
     ? `${v.kids} racer${v.kids === 1 ? "" : "s"} · ${v.adults} pit crew`
     : "Can't make it this time";
-  const msg = message(v);
-  $("#pass-msg").textContent = msg;
-  const wa = $("#wa-link");
-  wa.hidden = !PARTY.whatsapp;
-  wa.href = `https://wa.me/${PARTY.whatsapp.replace(/\D/g, "")}?text=${enc(msg)}`;
-  const vb = $("#viber-link");
-  vb.hidden = !PARTY.viber;
-  vb.href = `viber://chat?number=${enc(PARTY.viber.replace(/[^\d+]/g, ""))}&draft=${enc(msg)}`;
-  const ms = $("#ms-link");
-  ms.hidden = !PARTY.messenger;
-  ms.href = `https://m.me/${enc(PARTY.messenger)}`;
-  $("#sms-link").href = `sms:${PARTY.phone.replace(/[^\d+]/g, "")}?&body=${enc(msg)}`;
-  const step = $("#pass-step");
-  step.classList.toggle("sent", !!sent);
-  step.textContent = sent
-    ? (v.yes ? `Sent! ${PARTY.host} has your answer. See you there!` : `Sent! ${PARTY.host} has your answer. Thank you for letting us know.`)
-    : `Last step: tap an app to send this to ${PARTY.host}. The message is already written, so just press send.`;
-  $("#send-box").hidden = !!sent;
-  $("#resend-btn").hidden = !sent;
+  $("#pass-msg").textContent = message(v);
   form.hidden = true;
   pass.hidden = false;
   if (celebrate) {
@@ -1230,14 +1163,12 @@ function showPass(v, celebrate, sent) {
   }
 }
 
-let sending = false;
-form.addEventListener("submit", async e => {
+form.addEventListener("submit", e => {
   e.preventDefault();
-  if (sending) return;
   const v = collect();
   err.hidden = true;
   if (!v.name) {
-    err.textContent = `Add your name so ${PARTY.host} knows who's coming.`;
+    err.textContent = "Add your name so we know who's coming.";
     err.hidden = false;
     nameIn.focus();
     return;
@@ -1247,22 +1178,9 @@ form.addEventListener("submit", async e => {
     err.hidden = false;
     return;
   }
-  const submitBtn = $("#submit-btn");
-  sending = true;
-  submitBtn.setAttribute("aria-busy", "true");
-  submitBtn.textContent = "Sending…";
-  const sent = await sendToHost(v);
-  sending = false;
-  submitBtn.removeAttribute("aria-busy");
-  syncAttend();
-  store.set({ ...v, done: true, sent });
+  store.set({ ...v, done: true });
   if (v.yes) Sound.beep(880, 0.2);
-  showPass(v, true, sent);
-});
-
-$("#resend-btn").addEventListener("click", () => {
-  $("#send-box").hidden = false;
-  $("#resend-btn").hidden = true;
+  showPass(v, true);
 });
 
 $("#edit-btn").addEventListener("click", () => {
@@ -1278,7 +1196,7 @@ function toast(text) {
   el.textContent = text;
   el.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove("show"), 2400);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2800);
 }
 function selectText(el) {
   const range = document.createRange();
@@ -1287,21 +1205,19 @@ function selectText(el) {
   sel.removeAllRanges();
   sel.addRange(range);
 }
-// Copies the RSVP message; must run inside a tap so the browser allows it
-function copyMessage(doneText) {
+// Messenger can't pre-fill a message, so the tap copies it on the way; this must run inside the tap
+msLink.addEventListener("click", () => {
   const msgEl = $("#pass-msg");
+  const done = "Message copied. Paste it in Messenger and send.";
   const fallback = () => {
     selectText(msgEl);
     let ok = false;
     try { ok = document.execCommand("copy"); } catch (e) {}
-    toast(ok ? doneText : "Message selected. Use Copy from your menu.");
+    toast(ok ? done : "Message selected. Copy it, then paste it in Messenger.");
   };
   if (!navigator.clipboard || !navigator.clipboard.writeText) return fallback();
-  navigator.clipboard.writeText(msgEl.textContent).then(() => toast(doneText), fallback);
-}
-$("#copy-btn").addEventListener("click", () => copyMessage("Message copied"));
-// Messenger can't pre-fill a message, so copy it on the way and the guest only has to paste
-$("#ms-link").addEventListener("click", () => copyMessage(`Message copied. Paste it in Messenger and send it to ${PARTY.host}.`));
+  navigator.clipboard.writeText(msgEl.textContent).then(() => toast(done), fallback);
+});
 
 /* Sections give a small lift as they scroll into view (they are visible before that) */
 if ("IntersectionObserver" in window && !reduceMotion.matches) {
@@ -1340,14 +1256,14 @@ const saved = store.get();
 if (saved && typeof saved === "object") {
   nameIn.value = saved.name || "";
   $(saved.yes === false ? "#rsvp-no" : "#rsvp-yes").checked = true;
-  kidsIn.value = clampCount(saved.kids ?? 1);
-  adultsIn.value = clampCount(saved.adults ?? 1);
+  kidsIn.value = clampCount(saved.kids == null ? 1 : saved.kids);
+  adultsIn.value = clampCount(saved.adults == null ? 1 : saved.adults);
   noteIn.value = saved.note || "";
 }
 if (guest && !nameIn.value.trim()) nameIn.value = guest;
 syncSteps();
 syncAttend();
-if (saved && saved.done && saved.name) showPass(collect(), false, !!saved.sent);
+if (saved && saved.done && saved.name) showPass(collect(), false);
 </script>
 </body>
 </html>
