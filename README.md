@@ -1,27 +1,27 @@
-# Zian's Birthday Race
+# Zian's Christening
 
-An interactive, phone-first Hot Wheels birthday invitation, styled as a die-cast toy package on a `#f7f6f0` page. Everything lives in `index.html`, with the photo and logo in `assets/`.
+An interactive, phone-first Hot Wheels christening invitation, styled as a die-cast toy package on a `#f7f6f0` page. Everything lives in `index.html`, with the photo and logo in `assets/`.
 
 What guests can do:
 
 - Tap **Start your engines** for a start-light countdown with engine sound and confetti
 - Tap the car to rev it, or swipe it sideways to send it racing
 - Tap Zian's photo to see it bigger
-- See the Ninongs and Ninangs, the party details, and a live countdown
-- Add the party to Google Calendar or open directions in Google Maps
+- See the ceremony and reception details, the Ninongs and Ninangs, and a live countdown to the ceremony
+- Add the event to Google Calendar or open directions to the church and the reception in Google Maps
 - RSVP, then send the answer to the host with one tap on Viber, WhatsApp, Messenger or text message. The message is already written, so guests only press send (for Messenger they paste it, since Messenger can't pre-fill messages).
 
-## Edit the party details
+## Edit the event details
 
 Open `index.html` and change the `PARTY` block near the top of the `<script>`:
 
 ```js
 const PARTY = {
   name: "Zian",
-  age: 3,
-  start: "2026-12-24T14:00:00+08:00",   // date, start time, venue UTC offset (+08:00 = Philippines)
-  end:   "2026-12-24T16:00:00+08:00",
-  place: "1234 Name Street, Miami FL 5678",
+  event: "Christening",
+  // Times include the UTC offset: +08:00 is Philippine time
+  ceremony:  { start: "2026-12-24T10:00:00+08:00", place: "Church name, City" },
+  reception: { start: "2026-12-24T11:30:00+08:00", end: "2026-12-24T14:30:00+08:00", place: "Reception venue, City" },
   host: "Amy",
   phone: "123.123.1234",                // shown on the invite and used for text messages
   whatsapp: "11231231234",              // country code + number, digits only; "" hides the button
@@ -30,7 +30,7 @@ const PARTY = {
 };
 ```
 
-The weekday, the times, the calendar link, the countdown and the RSVP message are all worked out from these values.
+The weekday, the times, the calendar link, the directions, the countdown and the RSVP message are all worked out from these values. If the reception is at the church, use the same place for both and the second directions button hides itself.
 
 The Ninongs and Ninangs are listed directly in the HTML, in the section with the heading "Ninongs & Ninangs".
 
@@ -56,7 +56,7 @@ The plain link shows no guest name, so the same link can go to everyone. To gree
 
 ## Photo and logo
 
-- `assets/zian-photo.webp`: the birthday kid's photo, shown inside the tire in the toy package. Use a square image with the face centered; a transparent background works best.
+- `assets/zian-photo.webp`: Zian's photo, shown inside the tire in the toy package. Use a square image with the face centered; a transparent background works best.
 - `assets/zian-logo.webp`: the ZIAN flame logo at the top of the card.
 
 Replace either file with one of the same name to change it. If a file is missing, the page shows the first letter of the name in the tire and the name as text instead of the logo.

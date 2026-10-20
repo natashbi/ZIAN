@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Zian's Birthday Race</title>
-<meta name="description" content="You're invited to Zian's Hot Wheels birthday party. Speed on over to celebrate!">
+<title>Zian's Christening</title>
+<meta name="description" content="You're invited to Zian's Hot Wheels christening. Speed on over and celebrate with us!">
 <meta name="theme-color" content="#f7f6f0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -188,8 +188,7 @@ body{
 .tap-hint{margin:-6px 0 0;font-size:var(--t-sm);font-weight:600;color:var(--chrome-2);text-wrap:balance}
 
 .hello{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
-.turning{margin:0;font-weight:800;font-size:var(--t-lg);letter-spacing:.14em;text-transform:uppercase}
-.turning b{color:var(--flame-yellow)}
+.event-line{margin:0;font-weight:800;font-size:var(--t-lg);letter-spacing:.14em;text-transform:uppercase}
 .tagline{margin:0;font-weight:600;font-size:var(--t-lg);text-wrap:balance}
 
 .starter{display:flex;gap:10px;width:100%}
@@ -219,9 +218,10 @@ body{
 .date-words .wd{font-size:var(--t-xl);letter-spacing:.06em;color:var(--card)}
 .date-words .my{font-size:var(--t-md);letter-spacing:.14em;color:var(--ink-soft)}
 .facts{margin:0}
-.facts div{display:grid;grid-template-columns:4.6rem 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--chrome-2)}
+.facts div{display:grid;grid-template-columns:5.6rem 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--chrome-2)}
 .facts dt{padding-top:3px;font-size:var(--t-xs);font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
 .facts dd{margin:0;min-width:0;font-weight:700;font-size:var(--t-md);overflow-wrap:anywhere}
+.facts .place{display:block;margin-top:2px;font-weight:600;color:var(--ink-soft)}
 .sel{user-select:all;-webkit-user-select:all;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
 
 .actions{display:grid;grid-template-columns:1fr;gap:10px}
@@ -379,11 +379,11 @@ textarea.input{min-height:78px;resize:vertical}
       </p>
 
       <h1 class="title">
-        <span class="sr-only" data-bind="headline">You're invited to Zian's 3rd birthday party</span>
+        <span class="sr-only" data-bind="headline">You're invited to Zian's Christening</span>
         <img class="logo" id="logo" src="assets/zian-logo.webp" alt="" width="900" height="353" onerror="this.hidden=true;document.getElementById('name-text').hidden=false">
         <span class="name-text" id="name-text" data-bind="name" aria-hidden="true" hidden>Zian</span>
       </h1>
-      <p class="series">Birthday Series</p>
+      <p class="series">Christening Series</p>
 
       <div class="blister-wrap">
         <div class="blister" id="blister">
@@ -454,7 +454,7 @@ textarea.input{min-height:78px;resize:vertical}
               <path class="c-cut" d="M170 54L180 54"/>
               <path class="c-dark" d="M106 80L218 80L218 86L106 86Z"/>
               <circle class="c-white" cx="132" cy="64" r="13"/>
-              <text class="c-num" x="132" y="70.5" text-anchor="middle" data-bind="age">3</text>
+              <text class="c-num" x="132" y="70.5" text-anchor="middle" data-bind="initial">Z</text>
               <path class="c-head" d="M298 55L309 58L310 64L299 62Z"/>
               <rect class="c-dark" x="292" y="76" width="18" height="6" rx="2"/>
               <rect class="c-tail" x="13" y="56" width="5" height="10" rx="1.5"/>
@@ -477,13 +477,13 @@ textarea.input{min-height:78px;resize:vertical}
 
           <div class="track" aria-hidden="true"></div>
         </div>
-        <div class="badge" aria-hidden="true"><small>Ages</small><b><span data-bind="age">3</span>+</b></div>
+        <div class="badge" aria-hidden="true"><b>1st</b><small>Edition</small></div>
       </div>
       <p class="tap-hint">Tap the car to rev it, swipe it to race, or tap the photo</p>
 
       <div class="hello">
-        <p class="turning"><span data-bind="name">Zian</span> is turning <b data-bind="age">3</b></p>
-        <p class="tagline">Speed on over to celebrate!</p>
+        <p class="event-line" data-bind="eventName">Zian's Christening</p>
+        <p class="tagline">Speed on over and celebrate with us!</p>
       </div>
 
       <div class="starter">
@@ -501,12 +501,12 @@ textarea.input{min-height:78px;resize:vertical}
       <div class="plate">
         <div class="checker" aria-hidden="true"></div>
         <dl class="specs">
-          <div><dt>Model</dt><dd data-bind="model">'23 Zian</dd></div>
-          <div><dt>Mileage</dt><dd><span data-bind="age">3</span> laps of the sun</dd></div>
-          <div><dt>Top speed</dt><dd>Full zoomies</dd></div>
-          <div><dt>Fuel</dt><dd>Birthday cake</dd></div>
+          <div><dt>Model</dt><dd data-bind="name">Zian</dd></div>
+          <div><dt>Series</dt><dd>First Edition</dd></div>
+          <div><dt>Fuel</dt><dd>Milk &amp; cuddles</dd></div>
+          <div><dt>Pit crew</dt><dd>Ninongs &amp; Ninangs</dd></div>
         </dl>
-        <p class="fine">Collector No. <span data-bind="collector">03</span> · Birthday Series · 1:64 scale</p>
+        <p class="fine">Collector No. 01 · Christening Series · 1:64 scale</p>
       </div>
     </article>
   </main>
@@ -518,8 +518,8 @@ textarea.input{min-height:78px;resize:vertical}
       <span class="date-words"><span class="wd" data-bind="weekday">Thursday</span><span class="my" data-bind="monthYear">December 2026</span></span>
     </div>
     <dl class="facts">
-      <div><dt>Time</dt><dd data-bind="time">2:00 PM – 4:00 PM</dd></div>
-      <div><dt>Track</dt><dd data-bind="place">1234 Name Street, Miami FL 5678</dd></div>
+      <div><dt>Ceremony</dt><dd><span data-bind="ceremonyTime">10:00 AM</span><span class="place" data-bind="church">Church name, City</span></dd></div>
+      <div><dt>Reception</dt><dd><span data-bind="receptionTime">11:30 AM – 2:30 PM</span><span class="place" data-bind="reception">Reception venue, City</span></dd></div>
       <div><dt>RSVP</dt><dd><span data-bind="host">Amy</span> at <span class="sel" data-bind="phone">123.123.1234</span></dd></div>
     </dl>
     <div class="actions">
@@ -527,9 +527,13 @@ textarea.input{min-height:78px;resize:vertical}
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         Add to calendar
       </a>
-      <a class="btn btn-line" id="map-link" href="https://www.google.com/maps" target="_blank" rel="noopener">
+      <a class="btn btn-line" id="map-church" href="https://www.google.com/maps" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-6.2-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 14.8 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.3" fill="currentColor"/></svg>
-        Get directions
+        Directions to the church
+      </a>
+      <a class="btn btn-line" id="map-reception" href="https://www.google.com/maps" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-6.2-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 14.8 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.3" fill="currentColor"/></svg>
+        Directions to the reception
       </a>
     </div>
   </section>
@@ -570,7 +574,7 @@ textarea.input{min-height:78px;resize:vertical}
       <div><span id="t-m">--</span><small>Min</small></div>
       <div><span id="t-s">--</span><small>Sec</small></div>
     </div>
-    <p class="board-note" id="t-note">The green flag drops at the start of the party.</p>
+    <p class="board-note" id="t-note">The countdown runs to the start of the ceremony.</p>
   </section>
 
   <section class="panel reveal" id="rsvp" aria-labelledby="rsvp-h">
@@ -612,7 +616,7 @@ textarea.input{min-height:78px;resize:vertical}
 
       <div class="field">
         <label class="lbl" for="rsvp-note">Message for <span data-bind="name">Zian</span> <span class="opt">(optional)</span></label>
-        <textarea class="input" id="rsvp-note" rows="2" maxlength="200" placeholder="Happy birthday, racer!"></textarea>
+        <textarea class="input" id="rsvp-note" rows="2" maxlength="200" placeholder="God bless you, Zian!"></textarea>
       </div>
 
       <p class="err" id="rsvp-err" role="alert" hidden></p>
@@ -652,10 +656,10 @@ textarea.input{min-height:78px;resize:vertical}
     <span class="tire" aria-hidden="true"></span>
     <span class="disc">
       <span class="initial" aria-hidden="true" data-bind="initial">Z</span>
-      <img src="assets/zian-photo.webp" id="box-photo" alt="Zian, the birthday racer" width="760" height="760" onerror="this.hidden=true">
+      <img src="assets/zian-photo.webp" id="box-photo" alt="Photo of Zian" width="760" height="760" onerror="this.hidden=true">
     </span>
   </div>
-  <p class="box-cap" id="box-cap">Happy birthday, <span data-bind="name">Zian</span>!</p>
+  <p class="box-cap" id="box-cap">God bless you, <span data-bind="name">Zian</span>!</p>
   <button class="btn" id="photo-close" type="button">Close</button>
 </dialog>
 
@@ -680,11 +684,10 @@ textarea.input{min-height:78px;resize:vertical}
 /* ---------- Party details: edit these ---------- */
 const PARTY = {
   name: "Zian",
-  age: 3,
-  // Start and end, with the venue's UTC offset (Philippines is +08:00, Miami in December is -05:00)
-  start: "2026-12-24T14:00:00-05:00",
-  end:   "2026-12-24T16:00:00-05:00",
-  place: "1234 Name Street, Miami FL 5678",
+  event: "Christening",
+  // Times include the UTC offset: +08:00 is Philippine time
+  ceremony:  { start: "2026-12-24T10:00:00+08:00", place: "Church name, City" },
+  reception: { start: "2026-12-24T11:30:00+08:00", end: "2026-12-24T14:30:00+08:00", place: "Reception venue, City" },
   host: "Amy",
   phone: "123.123.1234",   // shown on the invite and used by "Send as text"
   whatsapp: "11231231234", // country code + number, digits only; "" hides the WhatsApp button
@@ -722,27 +725,27 @@ const KEY = PARTY.name.toLowerCase().replace(/\W+/g, "-") + "-invite";
 
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-const ordinal = n => { const s = ["th","st","nd","rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
 const clock = hhmm => { let [h, m] = hhmm.split(":").map(Number); const ap = h >= 12 ? "PM" : "AM"; h = h % 12 || 12; return `${h}:${String(m).padStart(2, "0")} ${ap}`; };
 
-const [Y, M, D] = PARTY.start.slice(0, 10).split("-").map(Number);
+const C = PARTY.ceremony, R = PARTY.reception;
+const [Y, M, D] = C.start.slice(0, 10).split("-").map(Number);
 const weekday = DAYS[new Date(Date.UTC(Y, M - 1, D)).getUTCDay()];
 const month = MONTHS[M - 1];
-const startClock = clock(PARTY.start.slice(11, 16));
-const timeText = `${startClock} – ${clock(PARTY.end.slice(11, 16))}`;
-const startMs = Date.parse(PARTY.start), endMs = Date.parse(PARTY.end);
-const ord = ordinal(PARTY.age);
+const ceremonyClock = clock(C.start.slice(11, 16));
+const receptionText = `${clock(R.start.slice(11, 16))} – ${clock(R.end.slice(11, 16))}`;
+const startMs = Date.parse(C.start), endMs = Date.parse(R.end);
+const eventName = `${PARTY.name}'s ${PARTY.event}`;
 
 const bind = {
-  name: PARTY.name, initial: PARTY.name.charAt(0), age: PARTY.age, day: D, weekday, monthYear: `${month} ${Y}`,
-  headline: `You're invited to ${PARTY.name}'s ${ord} birthday party`,
-  time: timeText, place: PARTY.place, host: PARTY.host, phone: PARTY.phone,
-  model: `'${String(Y - PARTY.age).slice(-2)} ${PARTY.name}`,
-  collector: String(PARTY.age).padStart(2, "0")
+  name: PARTY.name, initial: PARTY.name.charAt(0), day: D, weekday, monthYear: `${month} ${Y}`,
+  eventName, headline: `You're invited to ${eventName}`,
+  ceremonyTime: ceremonyClock, church: C.place, receptionTime: receptionText, reception: R.place,
+  host: PARTY.host, phone: PARTY.phone
 };
 $$("[data-bind]").forEach(el => { const v = bind[el.dataset.bind]; if (v != null) el.textContent = v; });
-document.title = `${PARTY.name}'s Birthday Race`;
-$("#box-photo").alt = `${PARTY.name}, the birthday racer`;
+document.title = eventName;
+$("#box-photo").alt = `Photo of ${PARTY.name}`;
+$("#rsvp-note").placeholder = `God bless you, ${PARTY.name}!`;
 
 /* Optional personal links: ...#Ninong-Jerald or ...?to=Maya%20and%20family show "Special invite for" with that name.
    The plain link shows no name, so it can go to everyone. */
@@ -773,15 +776,18 @@ addEventListener("hashchange", () => { if (readInvitee() !== guest) location.rel
 
 /* Calendar + directions */
 if (!Number.isFinite(startMs) || !Number.isFinite(endMs)) {
-  console.warn('PARTY.start and PARTY.end must look like "2026-12-24T14:00:00+08:00"');
+  console.warn('Ceremony and reception times must look like "2026-12-24T10:00:00+08:00"');
 }
 const utc = ms => Number.isFinite(ms) ? new Date(ms).toISOString().replace(/[-:]|\.\d{3}/g, "") : "";
 $("#cal-link").href = "https://calendar.google.com/calendar/render?action=TEMPLATE"
-  + `&text=${enc(`${PARTY.name}'s ${ord} Birthday Race`)}`
+  + `&text=${enc(eventName)}`
   + `&dates=${utc(startMs)}/${utc(endMs)}`
-  + `&details=${enc(`Hot Wheels birthday party for ${PARTY.name}. RSVP to ${PARTY.host} at ${PARTY.phone}.`)}`
-  + `&location=${enc(PARTY.place)}`;
-$("#map-link").href = "https://www.google.com/maps/search/?api=1&query=" + enc(PARTY.place);
+  + `&details=${enc(`Ceremony at ${C.place}, ${ceremonyClock}. Reception at ${R.place}, ${receptionText}. RSVP to ${PARTY.host} at ${PARTY.phone}.`)}`
+  + `&location=${enc(C.place)}`;
+const mapsUrl = place => "https://www.google.com/maps/search/?api=1&query=" + enc(place);
+$("#map-church").href = mapsUrl(C.place);
+$("#map-reception").href = mapsUrl(R.place);
+$("#map-reception").hidden = !R.place || R.place === C.place;
 
 /* Lap timer */
 const T = { d: $("#t-d"), h: $("#t-h"), m: $("#t-m"), s: $("#t-s") };
@@ -805,13 +811,13 @@ function tick() {
   setDigit(T.m, pad(Math.floor(left % 3600 / 60)));
   setDigit(T.s, pad(left % 60));
   if (left > 0) {
-    $("#t-note").textContent = `The green flag drops ${weekday} ${D} ${month} at ${startClock}.`;
+    $("#t-note").textContent = `The ceremony starts ${weekday} ${D} ${month} at ${ceremonyClock}.`;
   } else if (now < endMs) {
-    $("#cd-h").textContent = "Race in progress";
-    $("#t-note").textContent = `The party is on right now at ${PARTY.place}.`;
+    $("#cd-h").textContent = "We're celebrating now";
+    $("#t-note").textContent = `Ceremony at ${C.place}, then the reception at ${R.place}.`;
   } else {
     $("#cd-h").textContent = "Checkered flag";
-    $("#t-note").textContent = `Thanks for racing with us. Happy birthday, ${PARTY.name}!`;
+    $("#t-note").textContent = `Thank you for celebrating ${eventName} with us!`;
     clearInterval(timerId);
   }
 }
@@ -981,7 +987,7 @@ async function race() {
   lights.slice(0, 3).forEach(l => l.classList.remove("on"));
   lights[3].classList.add("on");
   startLabel.textContent = "GO!";
-  raceStatus.textContent = `Go! Happy birthday, ${PARTY.name}!`;
+  raceStatus.textContent = `Go, ${PARTY.name}, go!`;
   Sound.beep(880, 0.35);
   buzz([60, 40, 120]);
   Sound.engine([[0, 60], [0.5, 190], [0.55, 130], [1.2, 230], [1.8, 120], [2.1, 70]], 2.1, 0.18);
@@ -1129,8 +1135,8 @@ form.addEventListener("input", saveDraft);
 function message(v) {
   const when = `${weekday} ${D} ${month}`;
   let m = v.yes
-    ? `Hi ${PARTY.host}! ${v.name} will be at ${PARTY.name}'s ${ord} birthday race on ${when}, ${timeText}. Racers (kids): ${v.kids}. Pit crew (grown-ups): ${v.adults}.`
-    : `Hi ${PARTY.host}, ${v.name} can't make it to ${PARTY.name}'s ${ord} birthday race on ${when}. Have a great party!`;
+    ? `Hi ${PARTY.host}! ${v.name} will be at ${eventName} on ${when} (ceremony ${ceremonyClock}). Kids: ${v.kids}. Grown-ups: ${v.adults}.`
+    : `Hi ${PARTY.host}, ${v.name} can't make it to ${eventName} on ${when}. God bless ${PARTY.name}!`;
   if (v.note) m += ` Message for ${PARTY.name}: ${v.note}`;
   return m;
 }
@@ -1187,7 +1193,7 @@ function showPass(v, celebrate, sent) {
   const step = $("#pass-step");
   step.classList.toggle("sent", !!sent);
   step.textContent = sent
-    ? (v.yes ? `Sent! ${PARTY.host} has your answer. See you at the race!` : `Sent! ${PARTY.host} has your answer. Thank you for letting us know.`)
+    ? (v.yes ? `Sent! ${PARTY.host} has your answer. See you there!` : `Sent! ${PARTY.host} has your answer. Thank you for letting us know.`)
     : `Last step: tap an app to send this to ${PARTY.host}. The message is already written, so just press send.`;
   $("#send-box").hidden = !!sent;
   $("#resend-btn").hidden = !sent;
