@@ -1,14 +1,16 @@
 # Zian's Birthday Race
 
-An interactive, phone-first Hot Wheels birthday invitation. Everything lives in one file: `index.html`.
+An interactive, phone-first Hot Wheels birthday invitation, styled as a die-cast toy package on a `#f7f6f0` page. Everything lives in `index.html`, with the photo and logo in `assets/`.
 
 What guests can do:
 
 - See their own name on the card ("Special invite for …")
-- Tap **Start your engines** for a 3-2-1-GO start-light countdown with engine sound and confetti, or tap the car to rev it
-- Watch a live countdown to the party
+- Tap **Start your engines** for a start-light countdown with engine sound and confetti
+- Tap the car to rev it, or swipe it sideways to send it racing
+- Tap Zian's photo to see it bigger
+- See the Ninongs and Ninangs, the party details, and a live countdown
 - Add the party to Google Calendar or open directions in Google Maps
-- RSVP (number of kids and grown-ups, plus a message for the birthday kid). This builds a ready-made message to send to the host on WhatsApp or by text, or to copy.
+- RSVP, then send the answer to the host with one tap on Viber, WhatsApp, Messenger or text message. The message is already written, so guests only press send (for Messenger they paste it, since Messenger can't pre-fill messages).
 
 ## Edit the party details
 
@@ -18,37 +20,37 @@ Open `index.html` and change the `PARTY` block near the top of the `<script>`:
 const PARTY = {
   name: "Zian",
   age: 3,
-  start: "2026-12-24T14:00:00-05:00",   // date, start time, venue UTC offset
-  end:   "2026-12-24T16:00:00-05:00",
+  start: "2026-12-24T14:00:00+08:00",   // date, start time, venue UTC offset (+08:00 = Philippines)
+  end:   "2026-12-24T16:00:00+08:00",
   place: "1234 Name Street, Miami FL 5678",
   host: "Amy",
-  phone: "123.123.1234",
+  phone: "123.123.1234",                // shown on the invite and used for text messages
   whatsapp: "11231231234",              // country code + number, digits only; "" hides the button
+  viber: "+11231231234",                // number with country code; "" hides the button
+  messenger: "",                        // Messenger username (m.me/username); "" hides the button
   guestPlaceholder: "Guest Name"
 };
 ```
 
 The weekday, the times, the calendar link, the countdown and the RSVP message are all worked out from these values.
 
-## Photo and logo
-
-- `assets/zian-photo.webp`: the birthday kid's photo, shown inside the tire frame. Use a square image with the face centered; a transparent background works best.
-- `assets/zian-logo.webp`: the ZIAN flame logo used as the title.
-
-Replace either file with one of the same name to change it. If a file is missing, the page shows the first letter of the name in the tire and the name as text instead of the logo.
-
-## Colors
-
-The page uses one calm palette: paper `#f7f6f0` as the main color, warm ink for text, and the logo's red and yellow as small accents. The colors are defined once at the top of the `<style>` block.
+The Ninongs and Ninangs are listed directly in the HTML, in the section with the heading "Ninongs & Ninangs".
 
 ## Personal link for each guest
 
 Add the guest's name to the end of the link. Dashes become spaces:
 
-- `https://<your-site>/#Maya-and-family` shows **Maya and family**
-- `https://<your-site>/?to=Maya%20and%20family` does the same
+- `https://<your-site>/#Ninong-Jerald` shows **Ninong Jerald**
+- `https://<your-site>/?to=Maya%20and%20family` shows **Maya and family**
 
 With no name in the link, the card shows the `guestPlaceholder` text.
+
+## Photo and logo
+
+- `assets/zian-photo.webp`: the birthday kid's photo, shown inside the tire in the toy package. Use a square image with the face centered; a transparent background works best.
+- `assets/zian-logo.webp`: the ZIAN flame logo at the top of the card.
+
+Replace either file with one of the same name to change it. If a file is missing, the page shows the first letter of the name in the tire and the name as text instead of the logo.
 
 ## Put it online
 
