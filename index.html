@@ -584,7 +584,7 @@ At the back of GM Blu Carwash</span></dd></div>
       <div class="perf" aria-hidden="true"></div>
       <p class="pass-step" id="pass-step" tabindex="-1">Last step: tap Send on Messenger, then paste your message and send it.</p>
       <div class="backup" id="backup">
-        <a class="btn btn-blue" id="ms-link" href="fb-messenger://">
+        <a class="btn btn-blue" id="ms-link" href="https://m.me/" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5C6.7 2.5 2.5 6.4 2.5 11.3c0 2.6 1.2 4.9 3.1 6.5v3.7l3.4-1.9c.9.3 1.9.4 3 .4 5.3 0 9.5-3.9 9.5-8.7S17.3 2.5 12 2.5z" fill="currentColor"/><path class="ms-bolt" d="M6.6 14.1l3.6-3.8 2.3 1.8 3.9-3.8-3.6 3.8-2.3-1.8z"/></svg>
           Send on Messenger
         </a>
@@ -1097,19 +1097,12 @@ function gridSlot(name) {
   return pad(h % 24 + 1);
 }
 
-// With a username the button opens the family's chat in the Messenger app (m.me opens the app on phones);
-// without one it opens the Messenger app itself and the guest picks the chat
+// Always a normal https link: phones hand m.me links to the Messenger app (or the website if it isn't installed).
+// App-only links like fb-messenger:// show an error page in Android Chrome, so they are never used.
 const msLink = $("#ms-link");
-if (PARTY.messenger) {
-  msLink.href = `https://m.me/${enc(PARTY.messenger)}`;
-} else if (window.top !== window.self) {
-  // Inside an embedded preview the app link can't open, so use Messenger's web address instead
-  msLink.href = "https://www.messenger.com/";
-}
-if (msLink.href.startsWith("http")) {
-  msLink.target = "_blank";
-  msLink.rel = "noopener";
-}
+msLink.href = PARTY.messenger ? `https://m.me/${enc(PARTY.messenger)}` : "https://m.me/";
+msLink.target = "_blank";
+msLink.rel = "noopener";
 
 function showPass(v, celebrate) {
   $("#pass-title").textContent = v.yes ? "Pit pass" : "Spectator note";
