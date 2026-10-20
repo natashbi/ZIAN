@@ -103,7 +103,6 @@ body{
 .invitee{margin:0;display:flex;flex-direction:column;align-items:center;gap:4px;max-width:100%}
 .invitee-l{font-size:var(--t-xs);font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--chrome-2)}
 .invitee-n{max-width:100%;padding:0 12px 3px;border-bottom:2px solid var(--flame-yellow);font-family:var(--font-display);font-size:var(--t-xl);line-height:1.1;color:var(--chrome);overflow-wrap:anywhere}
-.invitee-n.is-empty{border-bottom-style:dashed;color:var(--chrome-dim)}
 
 .title{margin:0;width:100%;display:flex;justify-content:center}
 .logo{display:block;width:min(94%,340px);height:auto;filter:drop-shadow(0 6px 10px var(--shade))}
@@ -374,9 +373,9 @@ textarea.input{min-height:78px;resize:vertical}
   <main class="package">
     <div class="hanger" aria-hidden="true"><span class="slot"></span></div>
     <article class="card">
-      <p class="invitee">
+      <p class="invitee" id="invitee" hidden>
         <span class="invitee-l">Special invite for</span>
-        <span class="invitee-n is-empty" id="invitee-name">Guest Name</span>
+        <span class="invitee-n" id="invitee-name"></span>
       </p>
 
       <h1 class="title">
@@ -691,8 +690,6 @@ const PARTY = {
   whatsapp: "11231231234", // country code + number, digits only; "" hides the WhatsApp button
   viber: "+11231231234",   // number with country code, e.g. "+639171234567"; "" hides the Viber button
   messenger: "",           // the host's Messenger username (m.me/username); "" hides the Messenger button
-  // Shown until a guest's name is added to the link: ...#Maya-and-family or ...?to=Maya%20and%20family
-  guestPlaceholder: "Guest Name",
   // Automatic RSVP: answers go straight to the host's Google Form (email alert + a list in Google Sheets).
   // Fill in the form's "formResponse" address and each question's entry number. Leave action "" to use the send buttons instead.
   rsvpForm: {
@@ -747,7 +744,8 @@ $$("[data-bind]").forEach(el => { const v = bind[el.dataset.bind]; if (v != null
 document.title = `${PARTY.name}'s Birthday Race`;
 $("#box-photo").alt = `${PARTY.name}, the birthday racer`;
 
-/* Who is invited: read from ?to=Name or #Name-With-Dashes, else show the placeholder */
+/* Optional personal links: ...#Ninong-Jerald or ...?to=Maya%20and%20family show "Special invite for" with that name.
+   The plain link shows no name, so it can go to everyone. */
 function readInvitee() {
   let raw = "";
   try { raw = new URLSearchParams(location.search).get("to") || ""; } catch (e) {}
@@ -766,9 +764,10 @@ function readInvitee() {
   return s;
 }
 const guest = readInvitee();
-const inviteeEl = $("#invitee-name");
-inviteeEl.textContent = guest || PARTY.guestPlaceholder;
-inviteeEl.classList.toggle("is-empty", !guest);
+if (guest) {
+  $("#invitee-name").textContent = guest;
+  $("#invitee").hidden = false;
+}
 // Each guest link keeps its own saved RSVP, so a different guest in the link starts fresh
 addEventListener("hashchange", () => { if (readInvitee() !== guest) location.reload(); });
 

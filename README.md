@@ -4,7 +4,6 @@ An interactive, phone-first Hot Wheels birthday invitation, styled as a die-cast
 
 What guests can do:
 
-- See their own name on the card ("Special invite for …")
 - Tap **Start your engines** for a start-light countdown with engine sound and confetti
 - Tap the car to rev it, or swipe it sideways to send it racing
 - Tap Zian's photo to see it bigger
@@ -27,8 +26,7 @@ const PARTY = {
   phone: "123.123.1234",                // shown on the invite and used for text messages
   whatsapp: "11231231234",              // country code + number, digits only; "" hides the button
   viber: "+11231231234",                // number with country code; "" hides the button
-  messenger: "",                        // Messenger username (m.me/username); "" hides the button
-  guestPlaceholder: "Guest Name"
+  messenger: ""                         // Messenger username (m.me/username); "" hides the button
 };
 ```
 
@@ -49,14 +47,12 @@ With a Google Form connected, guests only tap **Submit**: their answer goes stra
 
 Automatic sending works when the invite is on a normal website such as GitHub Pages. The claude.ai preview link blocks pages from sending data out, so there the send buttons appear instead.
 
-## Personal link for each guest
+## Personal links (optional)
 
-Add the guest's name to the end of the link. Dashes become spaces:
+The plain link shows no guest name, so the same link can go to everyone. To greet one person by name, add it to the end of the link (dashes become spaces) and the card shows "Special invite for" with that name:
 
 - `https://<your-site>/#Ninong-Jerald` shows **Ninong Jerald**
 - `https://<your-site>/?to=Maya%20and%20family` shows **Maya and family**
-
-With no name in the link, the card shows the `guestPlaceholder` text.
 
 ## Photo and logo
 
