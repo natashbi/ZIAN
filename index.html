@@ -221,7 +221,7 @@ body{
 .facts div{display:grid;grid-template-columns:5.6rem 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--chrome-2)}
 .facts dt{padding-top:3px;font-size:var(--t-xs);font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
 .facts dd{margin:0;min-width:0;font-weight:700;font-size:var(--t-md);overflow-wrap:anywhere}
-.facts .place{display:block;margin-top:2px;font-weight:600;color:var(--ink-soft)}
+.facts .place{display:block;margin-top:2px;font-weight:600;color:var(--ink-soft);white-space:pre-line}
 .sel{user-select:all;-webkit-user-select:all;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
 
 .actions{display:grid;grid-template-columns:1fr;gap:10px}
@@ -514,12 +514,14 @@ textarea.input{min-height:78px;resize:vertical}
   <section class="panel reveal" aria-labelledby="details-h">
     <h2 class="panel-h" id="details-h">Race day</h2>
     <div class="date-row">
-      <span class="date-day" data-bind="day">24</span>
-      <span class="date-words"><span class="wd" data-bind="weekday">Thursday</span><span class="my" data-bind="monthYear">December 2026</span></span>
+      <span class="date-day" data-bind="day">7</span>
+      <span class="date-words"><span class="wd" data-bind="weekday">Saturday</span><span class="my" data-bind="monthYear">November 2026</span></span>
     </div>
     <dl class="facts">
-      <div><dt>Ceremony</dt><dd><span data-bind="ceremonyTime">10:00 AM</span><span class="place" data-bind="church">Church name, City</span></dd></div>
-      <div><dt>Reception</dt><dd><span data-bind="receptionTime">11:30 AM – 2:30 PM</span><span class="place" data-bind="reception">Reception venue, City</span></dd></div>
+      <div><dt>Ceremony</dt><dd><span data-bind="ceremonyTime">10:00 AM</span><span class="place" data-bind="church">Church details to follow</span></dd></div>
+      <div><dt>Reception</dt><dd><span data-bind="receptionTime">12:00 PM</span><span class="place" data-bind="reception">Lety's Place Private Pool and Event Center
+Purok 2, Brgy. Sto. Rosario Young, Zaragoza, Nueva Ecija
+At the back of GM Blu Carwash</span></dd></div>
       <div><dt>RSVP</dt><dd><span data-bind="host">Amy</span> at <span class="sel" data-bind="phone">123.123.1234</span></dd></div>
     </dl>
     <div class="actions">
@@ -685,9 +687,20 @@ textarea.input{min-height:78px;resize:vertical}
 const PARTY = {
   name: "Zian",
   event: "Christening",
-  // Times include the UTC offset: +08:00 is Philippine time
-  ceremony:  { start: "2026-12-24T10:00:00+08:00", place: "Church name, City" },
-  reception: { start: "2026-12-24T11:30:00+08:00", end: "2026-12-24T14:30:00+08:00", place: "Reception venue, City" },
+  // Times include the UTC offset: +08:00 is Philippine time.
+  // place: what the invite shows (each new line starts a new line on the card); "" shows "Church details to follow"
+  // map: what Google Maps searches for; leave "" to search for the place itself
+  ceremony: {
+    start: "2026-11-07T10:00:00+08:00",
+    place: "",
+    map: ""
+  },
+  reception: {
+    start: "2026-11-07T12:00:00+08:00",
+    end: "",   // optional, e.g. "2026-11-07T16:00:00+08:00"; without it the invite shows only the start time
+    place: "Lety's Place Private Pool and Event Center\nPurok 2, Brgy. Sto. Rosario Young, Zaragoza, Nueva Ecija\nAt the back of GM Blu Carwash",
+    map: "Lety's Place Private Pool and Event Center, Zaragoza, Nueva Ecija"
+  },
   host: "Amy",
   phone: "123.123.1234",   // shown on the invite and used by "Send as text"
   whatsapp: "11231231234", // country code + number, digits only; "" hides the WhatsApp button
@@ -732,14 +745,19 @@ const [Y, M, D] = C.start.slice(0, 10).split("-").map(Number);
 const weekday = DAYS[new Date(Date.UTC(Y, M - 1, D)).getUTCDay()];
 const month = MONTHS[M - 1];
 const ceremonyClock = clock(C.start.slice(11, 16));
-const receptionText = `${clock(R.start.slice(11, 16))} – ${clock(R.end.slice(11, 16))}`;
-const startMs = Date.parse(C.start), endMs = Date.parse(R.end);
+const receptionText = R.end ? `${clock(R.start.slice(11, 16))} – ${clock(R.end.slice(11, 16))}` : clock(R.start.slice(11, 16));
+const startMs = Date.parse(C.start);
+// Without an end time, assume the reception runs three hours
+const endMs = R.end ? Date.parse(R.end) : Date.parse(R.start) + 3 * 3600 * 1000;
+const oneLine = text => text.replace(/\s*\n\s*/g, ", ");
+const churchText = C.place || "Church details to follow";
+const receptionName = R.place.split("\n")[0];
 const eventName = `${PARTY.name}'s ${PARTY.event}`;
 
 const bind = {
   name: PARTY.name, initial: PARTY.name.charAt(0), day: D, weekday, monthYear: `${month} ${Y}`,
   eventName, headline: `You're invited to ${eventName}`,
-  ceremonyTime: ceremonyClock, church: C.place, receptionTime: receptionText, reception: R.place,
+  ceremonyTime: ceremonyClock, church: churchText, receptionTime: receptionText, reception: R.place,
   host: PARTY.host, phone: PARTY.phone
 };
 $$("[data-bind]").forEach(el => { const v = bind[el.dataset.bind]; if (v != null) el.textContent = v; });
@@ -782,12 +800,14 @@ const utc = ms => Number.isFinite(ms) ? new Date(ms).toISOString().replace(/[-:]
 $("#cal-link").href = "https://calendar.google.com/calendar/render?action=TEMPLATE"
   + `&text=${enc(eventName)}`
   + `&dates=${utc(startMs)}/${utc(endMs)}`
-  + `&details=${enc(`Ceremony at ${C.place}, ${ceremonyClock}. Reception at ${R.place}, ${receptionText}. RSVP to ${PARTY.host} at ${PARTY.phone}.`)}`
-  + `&location=${enc(C.place)}`;
-const mapsUrl = place => "https://www.google.com/maps/search/?api=1&query=" + enc(place);
-$("#map-church").href = mapsUrl(C.place);
-$("#map-reception").href = mapsUrl(R.place);
-$("#map-reception").hidden = !R.place || R.place === C.place;
+  + `&details=${enc(`Ceremony: ${ceremonyClock}, ${oneLine(churchText)}. Reception: ${receptionText}, ${oneLine(R.place)}. RSVP to ${PARTY.host} at ${PARTY.phone}.`)}`
+  + `&location=${enc(oneLine(C.place || R.place))}`;
+const mapsUrl = place => "https://www.google.com/maps/search/?api=1&query=" + enc(oneLine(place));
+const churchMap = C.map || C.place, receptionMap = R.map || R.place;
+$("#map-church").href = mapsUrl(churchMap);
+$("#map-church").hidden = !churchMap;
+$("#map-reception").href = mapsUrl(receptionMap);
+$("#map-reception").hidden = !receptionMap || receptionMap === churchMap;
 
 /* Lap timer */
 const T = { d: $("#t-d"), h: $("#t-h"), m: $("#t-m"), s: $("#t-s") };
@@ -814,7 +834,7 @@ function tick() {
     $("#t-note").textContent = `The ceremony starts ${weekday} ${D} ${month} at ${ceremonyClock}.`;
   } else if (now < endMs) {
     $("#cd-h").textContent = "We're celebrating now";
-    $("#t-note").textContent = `Ceremony at ${C.place}, then the reception at ${R.place}.`;
+    $("#t-note").textContent = C.place ? `Ceremony at ${oneLine(C.place)}, then the reception at ${receptionName}.` : `The reception is at ${receptionName}.`;
   } else {
     $("#cd-h").textContent = "Checkered flag";
     $("#t-note").textContent = `Thank you for celebrating ${eventName} with us!`;

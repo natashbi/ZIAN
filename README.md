@@ -20,8 +20,13 @@ const PARTY = {
   name: "Zian",
   event: "Christening",
   // Times include the UTC offset: +08:00 is Philippine time
-  ceremony:  { start: "2026-12-24T10:00:00+08:00", place: "Church name, City" },
-  reception: { start: "2026-12-24T11:30:00+08:00", end: "2026-12-24T14:30:00+08:00", place: "Reception venue, City" },
+  ceremony:  { start: "2026-11-07T10:00:00+08:00", place: "", map: "" },
+  reception: {
+    start: "2026-11-07T12:00:00+08:00",
+    end: "",                            // optional; without it only the start time shows
+    place: "Lety's Place Private Pool and Event Center\nPurok 2, Brgy. Sto. Rosario Young, Zaragoza, Nueva Ecija\nAt the back of GM Blu Carwash",
+    map: "Lety's Place Private Pool and Event Center, Zaragoza, Nueva Ecija"
+  },
   host: "Amy",
   phone: "123.123.1234",                // shown on the invite and used for text messages
   whatsapp: "11231231234",              // country code + number, digits only; "" hides the button
@@ -30,7 +35,7 @@ const PARTY = {
 };
 ```
 
-The weekday, the times, the calendar link, the directions, the countdown and the RSVP message are all worked out from these values. If the reception is at the church, use the same place for both and the second directions button hides itself.
+The weekday, the times, the calendar link, the directions, the countdown and the RSVP message are all worked out from these values. `place` is what the invite shows (`\n` starts a new line); `map` is what Google Maps searches for. An empty church `place` shows "Church details to follow" and hides the church directions button. If the reception is at the church, the second directions button hides itself.
 
 The Ninongs and Ninangs are listed directly in the HTML, in the section with the heading "Ninongs & Ninangs".
 
