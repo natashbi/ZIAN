@@ -252,19 +252,18 @@ body{
 .input{width:100%;min-height:50px;padding:10px 14px;border-radius:12px;border:2px solid var(--field-line);background:var(--field);color:var(--ink);font:600 var(--t-md)/1.3 var(--font-body)}
 .input::placeholder{color:var(--ink-faint);opacity:1}
 .input:focus{outline:none;border-color:var(--card);box-shadow:0 0 0 4px var(--ring)}
-.stepper{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:14px;border:2px solid var(--chrome-2);background:var(--field)}
-.stepper-l{font-weight:800;font-size:var(--t-md);letter-spacing:.05em;text-transform:uppercase}
-.stepper-l small{display:block;font-weight:600;font-size:var(--t-sm);letter-spacing:0;text-transform:none;color:var(--ink-soft)}
-.stepper-c{display:flex;align-items:center;gap:6px}
+.stepper{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px;border-radius:14px;border:2px solid var(--field-line);background:var(--field)}
+.count-wrap{flex:1;min-width:0;display:flex;align-items:baseline;justify-content:center;gap:6px}
+.count-unit{font-weight:700;font-size:var(--t-lg);color:var(--ink-soft)}
 .step{width:44px;height:44px;display:grid;place-items:center;border:0;border-radius:50%;background:var(--card);color:var(--chrome);font:800 1.5rem/1 var(--font-body);cursor:pointer}
 .step:disabled{background:var(--chrome-2);color:var(--ink-soft);cursor:default}
-.count{width:2.4ch;border:0;background:transparent;color:var(--ink);text-align:center;font:800 1.75rem/1 var(--font-body);font-variant-numeric:tabular-nums;-moz-appearance:textfield;appearance:textfield}
+.count{width:3ch;padding:0;border:0;background:transparent;color:var(--ink);text-align:center;font:800 1.75rem/1 var(--font-body);font-variant-numeric:tabular-nums;-moz-appearance:textfield;appearance:textfield}
 .count::-webkit-inner-spin-button,.count::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .count.bump{animation:bump .25s ease-out}
 @keyframes bump{from{transform:scale(1.35)}}
 .err{margin:0;font-weight:700;color:var(--flame-red-deep)}
-.answer-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.answer-row .btn{min-height:56px;padding-inline:10px;font-size:var(--t-md)}
+.answer-row{display:grid;grid-template-columns:1fr;gap:10px}
+.answer-row .btn{min-height:56px;font-size:var(--t-lg)}
 
 .pass{--focus:var(--ink);position:relative;transform-origin:50% 0;scroll-margin-top:12px;overflow:hidden;display:flex;flex-direction:column;gap:12px;padding:0 16px 18px;border-radius:18px;background:var(--flame-yellow);color:var(--ink)}
 .pass.show{animation:pass-in .55s cubic-bezier(.2,1.2,.4,1)}
@@ -558,12 +557,15 @@ At the back of GM Blu Carwash</span></dd></div>
         <input class="input" id="rsvp-name" name="name" type="text" autocomplete="name" placeholder="e.g. Maya and family" maxlength="60">
       </div>
 
-      <div class="stepper">
-        <label class="stepper-l" for="rsvp-count">How many are coming?<small>Including you</small></label>
-        <div class="stepper-c">
-          <button class="step" type="button" data-for="rsvp-count" data-d="-1" aria-label="One fewer">−</button>
-          <input class="count" id="rsvp-count" type="number" inputmode="numeric" min="1" max="20" value="1">
-          <button class="step" type="button" data-for="rsvp-count" data-d="1" aria-label="One more">+</button>
+      <div class="field">
+        <label class="lbl" for="rsvp-count">Number of guests <span class="opt">(including you)</span></label>
+        <div class="stepper">
+          <button class="step" type="button" data-for="rsvp-count" data-d="-1" aria-label="One fewer guest">−</button>
+          <span class="count-wrap">
+            <input class="count" id="rsvp-count" type="number" inputmode="numeric" min="1" max="20" value="1" aria-describedby="count-unit">
+            <span class="count-unit" id="count-unit">guest</span>
+          </span>
+          <button class="step" type="button" data-for="rsvp-count" data-d="1" aria-label="One more guest">+</button>
         </div>
       </div>
 
@@ -1058,6 +1060,7 @@ const clampCount = n => { n = parseInt(n, 10); return Number.isFinite(n) ? Math.
 
 function syncSteps() {
   countIn.value = clampCount(countIn.value);
+  $("#count-unit").textContent = +countIn.value === 1 ? "guest" : "guests";
   $$(".step").forEach(b => {
     b.disabled = (+b.dataset.d < 0 && +countIn.value <= 1) || (+b.dataset.d > 0 && +countIn.value >= 20);
   });
@@ -1112,7 +1115,7 @@ function showPass(v, celebrate) {
   $("#pass-title").textContent = v.yes ? "Pit pass" : "Spectator note";
   $("#pass-slot").textContent = v.yes ? `Grid slot ${gridSlot(v.name)}` : "Sitting this one out";
   $("#pass-name").textContent = v.name;
-  $("#pass-line").textContent = v.yes ? `${v.count} ${v.count === 1 ? "racer" : "racers"} coming` : "Can't make it this time";
+  $("#pass-line").textContent = v.yes ? `${v.count} ${v.count === 1 ? "guest" : "guests"} coming` : "Can't make it this time";
   $("#pass-msg").textContent = message(v);
   const step = $("#pass-step");
   step.textContent = PARTY.messenger
