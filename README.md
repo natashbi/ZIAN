@@ -4,10 +4,13 @@ An interactive, phone-first Hot Wheels christening invitation, styled as a die-c
 
 What guests can do:
 
+- Open the invite: it starts on a sealed toy package with Zian's photo. **Tap to open** runs the start lights and engine sound, then the package rolls up and the invite drives in
 - Tap **Start your engines** for a start-light countdown with engine sound and confetti
 - Tap the car to rev it, or swipe it sideways to send it racing
 - Tap Zian's photo to see it bigger
-- See the ceremony and reception details, the Ninongs and Ninangs, and a live countdown to the ceremony
+- Tap the **Photo finish** stack to shuffle through the race-day photos
+- See the ceremony and reception details, the dress code (tap a shirt to spin it), the Ninongs and Ninangs, and a live countdown to the ceremony
+- Swipe through **Lap by lap**, Zian's first 12 months, while a little car drives along the track to the checkered flag
 - Add the event to Google Calendar, or open directions to the church and the reception in Google Maps
 - RSVP: type their name, set how many are coming, tap **Coming!** or **Can't make it**, then **Copy message** and paste it to the family on Messenger
 
@@ -37,7 +40,18 @@ const PARTY = {
 - `place` is what the invite shows (`\n` starts a new line); `map` is what Google Maps searches for.
 - The weekday, calendar entry, directions, countdown and RSVP message are all worked out from these values.
 
-The Ninongs and Ninangs are listed directly in the HTML, in the section with the heading "Ninongs & Ninangs".
+The Ninongs and Ninangs are listed directly in the HTML, in the section with the heading "Ninongs & Ninangs". The dress code is in the HTML too, in the section with the heading "Dress code".
+
+## Monthly milestones
+
+The **Lap by lap** cards come from the `MILESTONES` list just below `PARTY`, one line per month from the 1st to the 12th. The text there now is a sample: replace each line with Zian's own milestone.
+
+```js
+{ text: "First real smile", photo: "assets/month-2.webp" },
+```
+
+- `text` is the line under the card.
+- `photo` is optional: put the picture in `assets/` and write its path. Square photos fit best. With `""` (or if the file is missing) the card shows the month number in a tire instead.
 
 ## Personal links (optional)
 
@@ -48,7 +62,8 @@ The plain link shows no guest name, so the same link can go to everyone. To gree
 ## Photo and logo
 
 - `assets/zian-photo.webp`: Zian's photo, shown inside the tire in the toy package. Use a square image with the face centered; a transparent background works best.
-- `assets/zian-logo.webp`: the ZIAN flame logo at the top of the card.
+- `assets/zian-logo.webp`: the ZIAN flame logo at the top of the card and on the opening screen.
+- `assets/zian-race-1.webp` and `assets/zian-race-2.webp`: the race-day photos. The first one is also on the opening screen. Both are landscape (3:2).
 
 Replace either file with one of the same name to change it. If a file is missing, the page shows the first letter of the name in the tire and the name as text instead of the logo.
 

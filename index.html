@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Racing+Sans+One&display=swap">
+<!-- The opening screen only shows when scripts run, so the invite never sits behind a gate that can't open -->
+<script>document.documentElement.classList.add("gate-on", "gate-shut")</script>
 <style>
 /* Layout: a die-cast blister card hanging from its peg tab under checkered bunting on #f7f6f0 paper. Zian's photo sits in the blister like the collectible, with the car on orange track below; the card back (race details, lap timer, RSVP pit pass) stacks below in one phone-width column. */
 :root{
@@ -307,6 +309,94 @@ body{
 .toast{position:fixed;left:50%;bottom:calc(60px + env(safe-area-inset-bottom,0px));z-index:50;width:max-content;max-width:calc(100vw - 32px);padding:12px 18px;border-radius:16px;text-align:center;background:var(--ink);color:var(--chrome);font-weight:700;box-shadow:0 0 0 2px var(--flame-yellow);opacity:0;transform:translate(-50%,20px);transition:opacity .25s,transform .25s;pointer-events:none}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
+/* Opening gate: the sealed toy package. A tap runs the start lights, then it rolls up like a garage door */
+.gate{display:none}
+.gate-shut,.gate-shut body{overflow:hidden}
+.gate-shut .wrap,.gate-shut .wrap *{animation-play-state:paused!important}
+.gate-on .gate{
+  --focus:var(--flame-yellow);
+  position:fixed;inset:0;z-index:35;display:flex;flex-direction:column;overflow:hidden;
+  padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);
+  background:var(--card-deep);color:var(--chrome);text-align:center;cursor:pointer;
+  transition:transform .85s cubic-bezier(.65,0,.3,1);
+}
+.gate.open{transform:translateY(-103%)}
+.gate > .checker{position:relative;flex:none}
+.gate-sun{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.gate-sun::before{content:"";position:absolute;left:50%;top:34%;width:250vmax;height:250vmax;margin:-125vmax 0 0 -125vmax;background:repeating-conic-gradient(var(--card) 0deg 6deg,var(--card-2) 6deg 12deg);animation:sun 70s linear infinite}
+.gate-sun::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 34%,transparent 35%,var(--shade) 100%)}
+@keyframes sun{to{rotate:360deg}}
+.gate-body{position:relative;flex:1;min-height:0;display:flex;overflow-y:auto;overscroll-behavior:contain;padding-inline:16px}
+.gate-inner{margin:auto;width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2.4vh,18px);padding-block:16px}
+.gate-logo{display:block;width:min(80%,300px,44vh);height:auto;filter:drop-shadow(0 6px 10px var(--shade));animation:hang .7s cubic-bezier(.2,1.2,.4,1) .15s backwards}
+.gate-h{margin:-4px 0 0;display:flex;flex-direction:column;gap:2px;font-weight:800;font-size:var(--t-lg);line-height:1.15;letter-spacing:.14em;text-transform:uppercase}
+.gate-kicker{font-size:var(--t-xs);letter-spacing:.3em;color:var(--series)}
+.gate-photo{position:relative;width:min(100%,54vh);aspect-ratio:3/2;overflow:hidden;border-radius:24px;border:3px solid var(--gloss);background:var(--card-deep);box-shadow:0 14px 26px var(--shade);rotate:-2deg;animation:pop .6s cubic-bezier(.2,1.4,.4,1) .35s backwards}
+.gate-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.gate-photo::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 6px var(--gloss-soft);background:linear-gradient(100deg,transparent 8%,var(--gloss-soft) 9% 16%,transparent 17% 78%,var(--gloss-soft) 80% 83%,transparent 84%)}
+.gate-date{margin:0;font-weight:700;letter-spacing:.06em;color:var(--chrome-2)}
+.gate-btn{flex:none;position:relative;width:min(100%,320px);animation:rise-in .6s cubic-bezier(.2,1.1,.4,1) .55s backwards}
+.gate-btn::after{content:"";position:absolute;inset:-7px;border-radius:20px;border:3px solid var(--flame-yellow);opacity:0;pointer-events:none;animation:ring 1.6s ease-out 1.2s infinite}
+@keyframes ring{from{opacity:.9;transform:scale(.97)}to{opacity:0;transform:scale(1.1,1.3)}}
+.counting .gate-btn::after{animation:none}
+@media (max-height:600px){.gate-logo{width:min(70%,36vh)}.gate-photo{width:min(100%,44vh)}}
+
+/* Photo finish: a stack of race photos; a tap deals the next one */
+.snaps{position:relative;display:grid;width:100%;aspect-ratio:3/2;margin-block:2px;padding:0;border:0;border-radius:16px;background:none;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.snap{grid-area:1/1;display:block;width:100%;height:100%;object-fit:cover;border-radius:16px;border:5px solid var(--surface);background:var(--chrome-2);box-shadow:0 0 0 1px var(--line),0 12px 22px -8px var(--shadow);transform:translate(8px,6px) rotate(3deg);transition:transform .45s cubic-bezier(.3,1.3,.5,1)}
+.snap[data-pos="0"]{z-index:2;transform:rotate(-1.5deg)}
+.snap[data-pos="1"]{z-index:1}
+.snap.out{transform:translate(60%,-8%) rotate(14deg);transition:transform .26s cubic-bezier(.5,0,1,.6)}
+.seen .snap{animation:deal .6s cubic-bezier(.2,1.2,.4,1) backwards;animation-delay:calc(var(--i) * .15s)}
+@keyframes deal{from{transform:translate(-30px,40px) rotate(-14deg);opacity:0}}
+.snap-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:var(--t-sm);font-weight:600;color:var(--ink-soft)}
+.snap-dots{flex:none;display:flex;gap:6px}
+.snap-dots i{width:10px;height:10px;border-radius:5px;background:var(--chrome-2);transition:width .25s,background .25s}
+.snap-dots i.on{width:24px;background:var(--flame-red)}
+
+/* Dress code */
+.outfits{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.outfit{min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 10px 16px;border-radius:18px;text-align:center;color:var(--chrome);background:radial-gradient(100% 70% at 50% 35%,var(--card),var(--card-deep));box-shadow:inset 0 0 0 2px var(--gloss-soft);cursor:pointer;-webkit-user-select:none;user-select:none}
+.outfit-who{font-size:var(--t-xs);font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--chrome-2)}
+.shirt{width:min(84px,70%);height:auto;overflow:visible;filter:drop-shadow(0 6px 6px var(--shade))}
+.shirt .cloth,.shirt .collar{stroke:var(--ink);stroke-width:3;stroke-linejoin:round}
+.shirt .collar{fill:none}
+.shirt-white .cloth{fill:var(--chrome)}
+.shirt-any .cloth{fill:var(--flame-red);animation:any-color 5s linear infinite}
+@keyframes any-color{0%,100%{fill:var(--flame-red)}25%{fill:var(--flame-yellow)}50%{fill:var(--go)}75%{fill:var(--track)}}
+.sparkle{fill:var(--flame-yellow);transform-box:fill-box;transform-origin:center;animation:twinkle 1.6s ease-in-out infinite}
+.sparkle.s2{animation-delay:-.8s}
+@keyframes twinkle{0%,100%{transform:scale(.3);opacity:.3}50%{transform:scale(1);opacity:1}}
+.outfit-what{font-family:var(--font-display);font-size:clamp(1.375rem,6.5vw,1.875rem);line-height:1;color:var(--flame-yellow)}
+.outfit-note{font-weight:600;font-size:var(--t-sm);line-height:1.25;color:var(--chrome-2)}
+.hint{margin:-4px 0 0;font-size:var(--t-sm);font-weight:600;color:var(--ink-faint);text-align:center}
+
+/* Lap by lap: monthly milestones on a swipeable reel, with a little car on the track above */
+.ms-track{position:relative;height:40px;cursor:pointer}
+.ms-road{position:absolute;left:0;right:28px;bottom:4px;height:10px;border-radius:5px;background:linear-gradient(var(--track-hi) 0 2px,var(--track) 2px 7px,var(--track-lo) 7px)}
+.ms-ticks{position:absolute;left:19px;right:47px;bottom:6px;display:flex;justify-content:space-between}
+.ms-ticks i{width:6px;height:6px;border-radius:50%;background:var(--track-lo);transition:background .25s,transform .25s}
+.ms-ticks i.done{background:var(--flame-yellow);transform:scale(1.35)}
+.ms-car{position:absolute;left:0;bottom:12px;width:44px;transition:transform .5s cubic-bezier(.3,1.2,.5,1)}
+.ms-car svg{display:block;width:100%;height:auto}
+.ms-flag{position:absolute;right:0;bottom:4px}
+.ms-track.done .lap-flag i{animation:wave .35s ease-in-out 6 alternate}
+.ms-reel{position:relative;display:grid;grid-auto-flow:column;grid-auto-columns:78%;gap:12px;margin-inline:-18px;padding:4px 18px 8px;scroll-padding-inline:18px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none}
+.ms-reel::-webkit-scrollbar{display:none}
+.ms-card{margin:0;min-width:0;scroll-snap-align:center;cursor:pointer;opacity:.55;transform:scale(.92);transition:transform .35s cubic-bezier(.3,1.2,.5,1),opacity .35s}
+.ms-card.on{opacity:1;transform:none;cursor:default}
+.ms-pic{position:relative;aspect-ratio:1;overflow:hidden;border-radius:20px;background:radial-gradient(75% 75% at 50% 45%,var(--gloss-soft),transparent 70%),var(--c);box-shadow:inset 0 -18px 26px -10px var(--shade),0 10px 18px -10px var(--shadow)}
+.ms-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ms-tire{position:absolute;inset:17%}
+.ms-tire b{font-family:var(--font-display);font-weight:400;font-size:clamp(3rem,15vw,4.25rem);line-height:1;color:var(--ink)}
+.ms-tag{position:absolute;left:10px;top:10px;z-index:1;padding:4px 10px;border-radius:999px;background:var(--flame-yellow);color:var(--ink);font-weight:800;font-size:var(--t-sm);letter-spacing:.08em;text-transform:uppercase;box-shadow:0 3px 0 var(--flame-red)}
+.ms-card.on .ms-tag{animation:pop .45s cubic-bezier(.2,1.5,.4,1)}
+.ms-pic.bounce{animation:bump .3s ease-out}
+.ms-text{padding:10px 4px 0;font-weight:700;line-height:1.25;text-wrap:balance}
+.ms-nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ms-label{margin:0;font-weight:800;font-size:var(--t-sm);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.step svg{width:22px;height:22px}
+
 /* Opening reveal and touch extras */
 .pennants-in .pennant{animation:drop .6s cubic-bezier(.2,1.3,.4,1) backwards,sway 3.2s ease-in-out .6s infinite alternate}
 .bunting .pennant{animation-delay:calc(var(--i) * .05s),calc(var(--i) * -.35s)}
@@ -332,6 +422,28 @@ body{
 </style>
 </head>
 <body>
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-h">
+  <div class="gate-sun" aria-hidden="true"></div>
+  <div class="checker" aria-hidden="true"></div>
+  <div class="gate-body">
+    <div class="gate-inner">
+      <p class="invitee" id="gate-for" hidden>
+        <span class="invitee-l">Special invite for</span>
+        <span class="invitee-n" id="gate-name"></span>
+      </p>
+      <img class="gate-logo" src="assets/zian-logo.webp" alt="" width="900" height="335" onerror="this.hidden=true">
+      <h2 class="gate-h" id="gate-h"><span class="gate-kicker">You're invited to</span><span data-bind="eventName">Zian's Christening</span></h2>
+      <div class="gate-photo">
+        <img src="assets/zian-race-1.webp" alt="Zian smiling on his red ride-on car" width="1200" height="801" fetchpriority="high" onerror="this.hidden=true">
+        <div class="lights" aria-hidden="true"><i class="light"></i><i class="light"></i><i class="light"></i><i class="light go"></i></div>
+      </div>
+      <p class="gate-date" data-bind="dateLine">Saturday, 7 November 2026</p>
+      <button class="btn-start gate-btn" id="gate-btn" type="button"><span id="gate-label">Tap to open</span></button>
+    </div>
+  </div>
+  <div class="checker" aria-hidden="true"></div>
+</div>
+
 <div class="wrap">
 
   <div class="bunting pennants-in" aria-hidden="true">
@@ -478,6 +590,19 @@ body{
     </article>
   </main>
 
+  <section class="panel reveal" aria-labelledby="photos-h">
+    <h2 class="panel-h" id="photos-h">Photo finish</h2>
+    <p class="panel-sub">Our little racer, ready to roll</p>
+    <button class="snaps" id="snaps" type="button" aria-label="Show the next photo">
+      <img class="snap" style="--i:1" src="assets/zian-race-2.webp" alt="Zian at the wheel of his red ride-on car" width="1200" height="801" loading="lazy">
+      <img class="snap" style="--i:0" src="assets/zian-race-1.webp" alt="Zian smiling on his red ride-on car" width="1200" height="801" loading="lazy">
+    </button>
+    <div class="snap-foot">
+      <span class="snap-dots" id="snap-dots" aria-hidden="true"></span>
+      <span id="snap-count" aria-live="polite">Tap the photo for the next one</span>
+    </div>
+  </section>
+
   <section class="panel reveal" aria-labelledby="details-h">
     <h2 class="panel-h" id="details-h">Race day</h2>
     <div class="date-row">
@@ -507,6 +632,34 @@ At the back of GM Blu Carwash</span></dd></div>
     </div>
   </section>
 
+  <section class="panel reveal" aria-labelledby="dress-h">
+    <h2 class="panel-h" id="dress-h">Dress code</h2>
+    <p class="panel-sub">What to wear on race day</p>
+    <div class="outfits">
+      <div class="outfit">
+        <span class="outfit-who">Ninongs &amp; Ninangs</span>
+        <svg class="shirt shirt-white" viewBox="0 0 120 112" aria-hidden="true">
+          <path class="cloth" d="M42 8L20 15L4 36L19 48L29 40L29 104Q29 108 33 108L87 108Q91 108 91 104L91 40L101 48L116 36L100 15L78 8Q74 24 60 24Q46 24 42 8Z"/>
+          <path class="collar" d="M45 9Q49 19 60 19Q71 19 75 9"/>
+          <g transform="translate(110 10)"><path class="sparkle" d="M0-8L2-2L8 0L2 2L0 8L-2 2L-8 0L-2-2Z"/></g>
+          <g transform="translate(10 66)"><path class="sparkle s2" d="M0-6L1.5-1.5L6 0L1.5 1.5L0 6L-1.5 1.5L-6 0L-1.5-1.5Z"/></g>
+        </svg>
+        <span class="outfit-what">White</span>
+        <span class="outfit-note">Please come dressed in white</span>
+      </div>
+      <div class="outfit">
+        <span class="outfit-who">Guests</span>
+        <svg class="shirt shirt-any" viewBox="0 0 120 112" aria-hidden="true">
+          <path class="cloth" d="M42 8L20 15L4 36L19 48L29 40L29 104Q29 108 33 108L87 108Q91 108 91 104L91 40L101 48L116 36L100 15L78 8Q74 24 60 24Q46 24 42 8Z"/>
+          <path class="collar" d="M45 9Q49 19 60 19Q71 19 75 9"/>
+        </svg>
+        <span class="outfit-what">Comfy &amp; casual</span>
+        <span class="outfit-note">Any comfortable or casual clothes</span>
+      </div>
+    </div>
+    <p class="hint">Tap a shirt to give it a spin</p>
+  </section>
+
   <section class="panel reveal" aria-labelledby="sponsors-h">
     <h2 class="panel-h" id="sponsors-h">Ninongs &amp; Ninangs</h2>
     <p class="panel-sub">Our pit crew chiefs</p>
@@ -532,6 +685,35 @@ At the back of GM Blu Carwash</span></dd></div>
         </ul>
       </div>
     </div>
+  </section>
+
+  <section class="panel reveal" aria-labelledby="ms-h">
+    <h2 class="panel-h" id="ms-h">Lap by lap</h2>
+    <p class="panel-sub" data-bind="milestonesSub">Zian's first year, one month at a time</p>
+    <div class="ms-track" id="ms-track" aria-hidden="true">
+      <span class="ms-road"></span>
+      <span class="ms-ticks" id="ms-ticks"></span>
+      <span class="ms-car" id="ms-car">
+        <svg viewBox="0 0 320 114">
+          <use href="#body-path" class="c-paint"/>
+          <path d="M106 45Q120 28 150 25L192 25Q208 27 228 43Z" class="c-dark"/>
+          <g class="wheel"><circle class="c-tire" cx="76" cy="86" r="24"/><circle class="c-rim" cx="76" cy="86" r="13"/><path class="c-spoke" d="M76 86V75M76 86L86 89"/></g>
+          <g class="wheel"><circle class="c-tire" cx="248" cy="86" r="24"/><circle class="c-rim" cx="248" cy="86" r="13"/><path class="c-spoke" d="M248 86V75M248 86L258 89"/></g>
+        </svg>
+      </span>
+      <span class="lap-flag ms-flag"><i></i></span>
+    </div>
+    <div class="ms-reel" id="ms-reel" role="region" aria-label="Monthly milestones" tabindex="0"></div>
+    <div class="ms-nav">
+      <button class="step" id="ms-prev" type="button" aria-label="Previous month">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <p class="ms-label" id="ms-label" aria-live="polite">Month 1 of 12</p>
+      <button class="step" id="ms-next" type="button" aria-label="Next month">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <p class="hint">Swipe the cards or tap the arrows</p>
   </section>
 
   <section class="board reveal" aria-labelledby="cd-h">
@@ -648,6 +830,22 @@ const PARTY = {
     map: "Lety's Place Private Pool and Event Center, Zaragoza, Nueva Ecija"
   }
 };
+/* Monthly milestones, months 1 to 12. SAMPLE TEXT: replace each line with Zian's own.
+   photo: a file in assets/, e.g. "assets/month-1.webp"; leave "" to show the month number in a tire */
+const MILESTONES = [
+  { text: "Hello, world! Our newest racer joins the pit crew", photo: "" },
+  { text: "First real smile", photo: "" },
+  { text: "Laughing out loud", photo: "" },
+  { text: "Rolling over like a pro", photo: "" },
+  { text: "Grabbing everything in reach", photo: "" },
+  { text: "First taste of solid food", photo: "" },
+  { text: "Sitting up on his own", photo: "" },
+  { text: "Crawling at full speed", photo: "" },
+  { text: "Pulling up to stand", photo: "" },
+  { text: "First bye-bye wave", photo: "" },
+  { text: "Cruising along the furniture", photo: "" },
+  { text: "First steps and a first birthday!", photo: "" }
+];
 /* Photo and logo live in assets/zian-photo.webp and assets/zian-logo.webp */
 /* ----------------------------------------------- */
 
@@ -686,8 +884,9 @@ const eventName = `${PARTY.name}'s ${PARTY.event}`;
 
 const bind = {
   name: PARTY.name, initial: PARTY.name.charAt(0), day: D, weekday, monthYear: `${month} ${Y}`,
-  eventName, headline: `You're invited to ${eventName}`,
-  ceremonyTime: ceremonyClock, church: churchText, receptionTime: receptionText, reception: R.place
+  eventName, headline: `You're invited to ${eventName}`, dateLine: `${weekday}, ${D} ${month} ${Y}`,
+  ceremonyTime: ceremonyClock, church: churchText, receptionTime: receptionText, reception: R.place,
+  milestonesSub: `${PARTY.name}'s first year, one month at a time`
 };
 $$("[data-bind]").forEach(el => { const v = bind[el.dataset.bind]; if (v != null) el.textContent = v; });
 document.title = eventName;
@@ -888,8 +1087,52 @@ function burstFrom(el, n) {
   Confetti.burst(r.left + r.width / 2, r.top + r.height / 2, n);
 }
 
+/* Opening: a tap anywhere runs the start lights, then the package rolls up on the invite.
+   The tap also lets the browser play sound, so the engine can roar from the start. */
+const gate = $("#gate"), root = document.documentElement;
+if (root.classList.contains("gate-on")) {
+  const gateLights = $$(".light", gate), gateLabel = $("#gate-label");
+  const behind = [$(".wrap"), $("#lap")];
+  behind.forEach(el => { el.inert = true; });
+  if (guest) {
+    $("#gate-name").textContent = guest;
+    $("#gate-for").hidden = false;
+  }
+  let opening = false;
+  gate.addEventListener("click", async () => {
+    if (opening) return;
+    opening = true;
+    gate.classList.add("counting");
+    Sound.unlock();
+    buzz(15);
+    if (!reduceMotion.matches) {
+      Sound.engine([[0, 38], [0.1, 70], [0.35, 45], [0.6, 85], [0.9, 50], [1.2, 60]], 1.3);
+      for (let i = 0; i < 3; i++) {
+        gateLights[i].classList.add("on");
+        gateLabel.textContent = String(3 - i);
+        Sound.beep(440, 0.14);
+        buzz(20);
+        await wait(380);
+      }
+      gateLights.slice(0, 3).forEach(l => l.classList.remove("on"));
+      gateLights[3].classList.add("on");
+    }
+    gateLabel.textContent = "GO!";
+    Sound.beep(880, 0.3);
+    Sound.engine([[0, 60], [0.4, 200], [0.9, 110], [1.3, 60]], 1.4, 0.18);
+    buzz([50, 40, 100]);
+    behind.forEach(el => { el.inert = false; });
+    // Unpauses the invite's own opening (bunting drop, card swing, car driving in) as the door rises
+    root.classList.remove("gate-shut");
+    gate.classList.add("open");
+    if (!reduceMotion.matches) Confetti.burst(innerWidth / 2, innerHeight * 0.4, 160);
+    const done = () => { root.classList.remove("gate-on"); gate.remove(); };
+    if (reduceMotion.matches) done(); else setTimeout(done, 900);
+  });
+}
+
 /* Start your engines: lights, then the car laps the blister */
-const startBtn = $("#start-btn"), startLabel = $("#start-label"), lights = $$(".light");
+const startBtn = $("#start-btn"), startLabel = $("#start-label"), lights = $$("#blister .light");
 const blister = $("#blister"), carBtn = $("#car"), raceStatus = $("#race-status");
 let racing = false, flinging = false, revTimer = 0;
 
@@ -1044,6 +1287,126 @@ photoBox.addEventListener("click", e => {
 });
 photoBox.addEventListener("close", () => document.body.append($("#confetti")));
 
+/* Photo finish: a tap slides the top photo off the stack and tucks it underneath */
+const snaps = $("#snaps"), snapImgs = $$(".snap", snaps), snapDots = $("#snap-dots");
+snapImgs.forEach(() => snapDots.append(document.createElement("i")));
+let snapTop = 0, snapBusy = false;
+function layoutSnaps() {
+  const n = snapImgs.length;
+  snapImgs.forEach((img, i) => { img.dataset.pos = (i - snapTop + n) % n; });
+  [...snapDots.children].forEach((d, i) => d.classList.toggle("on", i === snapTop));
+}
+snaps.addEventListener("click", async () => {
+  if (snapBusy || snapImgs.length < 2) return;
+  snapBusy = true;
+  buzz(10);
+  const top = snapImgs[snapTop];
+  top.classList.add("out");
+  await wait(reduceMotion.matches ? 0 : 260);
+  snapTop = (snapTop + 1) % snapImgs.length;
+  layoutSnaps();
+  top.classList.remove("out");
+  $("#snap-count").textContent = `Photo ${snapTop + 1} of ${snapImgs.length}: ${snapImgs[snapTop].alt}`;
+  await wait(reduceMotion.matches ? 0 : 300);
+  snapBusy = false;
+});
+layoutSnaps();
+
+/* Dress code: tap a shirt for a twirl */
+$$(".outfit").forEach(o => o.addEventListener("click", () => {
+  buzz(10);
+  const shirt = $(".shirt", o);
+  if (reduceMotion.matches || !shirt.animate) return;
+  shirt.animate([
+    { transform: "perspective(300px) rotateY(0)" },
+    { transform: "perspective(300px) translateY(-10px) rotateY(180deg)" },
+    { transform: "perspective(300px) rotateY(360deg)" }
+  ], { duration: 700, easing: "ease-in-out" });
+}));
+
+/* Lap by lap: swipe or step through the months; the little car drives along the track to match */
+const reel = $("#ms-reel"), msTrack = $("#ms-track"), msTicks = $("#ms-ticks"), msCar = $("#ms-car");
+const ordinal = n => n + (Math.floor(n % 100 / 10) === 1 ? "th" : ["th", "st", "nd", "rd"][n % 10] || "th");
+const msCards = MILESTONES.map((m, i) => {
+  const n = i + 1;
+  const card = document.createElement("figure");
+  card.className = "ms-card";
+  card.innerHTML = '<div class="ms-pic"><span class="ms-tire" aria-hidden="true"><span class="tire"></span><span class="disc"><b></b></span></span><span class="ms-tag"></span></div><figcaption class="ms-text"></figcaption>';
+  card.style.setProperty("--c", `var(${["--card", "--flame-red", "--track"][i % 3]})`);
+  $("b", card).textContent = n;
+  $(".ms-tag", card).textContent = `${ordinal(n)} month`;
+  $(".ms-text", card).textContent = m.text;
+  if (m.photo) {
+    const img = new Image();
+    img.alt = `${PARTY.name} at ${n} ${n === 1 ? "month" : "months"}`;
+    img.loading = "lazy";
+    img.onerror = () => img.remove();
+    img.src = m.photo;
+    $(".ms-tag", card).before(img);
+  }
+  card.addEventListener("click", () => {
+    if (i !== msIdx) return goMs(i);
+    const pic = $(".ms-pic", card);
+    pic.classList.remove("bounce");
+    void pic.offsetWidth;
+    pic.classList.add("bounce");
+    buzz(10);
+  });
+  reel.append(card);
+  msTicks.append(document.createElement("i"));
+  return card;
+});
+
+let msIdx = -1, msSpin = 0, msRaf = 0;
+function placeMsCar() {
+  const t = msTicks.children[msIdx];
+  if (t) msCar.style.transform = `translateX(${msTicks.offsetLeft + t.offsetLeft + t.offsetWidth / 2 - msCar.offsetWidth / 2}px)`;
+}
+function setMs(i, quiet) {
+  if (i === msIdx) return;
+  msIdx = i;
+  const last = i === msCards.length - 1;
+  msCards.forEach((c, k) => c.classList.toggle("on", k === i));
+  [...msTicks.children].forEach((t, k) => t.classList.toggle("done", k <= i));
+  placeMsCar();
+  $("#ms-label").textContent = `Month ${i + 1} of ${msCards.length}`;
+  $("#ms-prev").disabled = i === 0;
+  $("#ms-next").disabled = last;
+  msTrack.classList.toggle("done", last);
+  if (quiet) return;
+  msCar.classList.add("spin");
+  clearTimeout(msSpin);
+  msSpin = setTimeout(() => msCar.classList.remove("spin"), 450);
+  buzz(8);
+  if (last) burstFrom(msCards[i], 90);
+}
+// The card whose middle is nearest the middle of the reel
+function msNearest() {
+  const mid = reel.scrollLeft + reel.clientWidth / 2;
+  let best = 0, bestD = Infinity;
+  msCards.forEach((c, k) => {
+    const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid);
+    if (d < bestD) { bestD = d; best = k; }
+  });
+  return best;
+}
+function goMs(i) {
+  const c = msCards[Math.max(0, Math.min(msCards.length - 1, i))];
+  reel.scrollTo({ left: c.offsetLeft - (reel.clientWidth - c.offsetWidth) / 2, behavior: reduceMotion.matches ? "auto" : "smooth" });
+}
+reel.addEventListener("scroll", () => {
+  if (!msRaf) msRaf = requestAnimationFrame(() => { msRaf = 0; setMs(msNearest()); });
+}, { passive: true });
+$("#ms-prev").addEventListener("click", () => goMs(msIdx - 1));
+$("#ms-next").addEventListener("click", () => goMs(msIdx + 1));
+// Tap a spot on the track to jump to that month
+msTrack.addEventListener("click", e => {
+  const r = msTicks.getBoundingClientRect();
+  goMs(Math.round((e.clientX - r.left) / r.width * (msCards.length - 1)));
+});
+addEventListener("resize", placeMsCar);
+if (msCards.length) setMs(msNearest(), true);
+
 /* RSVP: guests pick an answer with one tap, copy the ready-made message, and send it on Messenger themselves */
 const RSVP_KEY = KEY + "-rsvp" + (guest ? "-" + guest.toLowerCase().replace(/\W+/g, "-") : "");
 const store = {
@@ -1057,11 +1420,11 @@ const clampCount = n => { n = parseInt(n, 10); return Number.isFinite(n) ? Math.
 function syncSteps() {
   countIn.value = clampCount(countIn.value);
   $("#count-unit").textContent = +countIn.value === 1 ? "guest" : "guests";
-  $$(".step").forEach(b => {
+  $$(".step[data-for]").forEach(b => {
     b.disabled = (+b.dataset.d < 0 && +countIn.value <= 1) || (+b.dataset.d > 0 && +countIn.value >= 20);
   });
 }
-$$(".step").forEach(b => b.addEventListener("click", () => {
+$$(".step[data-for]").forEach(b => b.addEventListener("click", () => {
   countIn.value = clampCount(+countIn.value + +b.dataset.d);
   syncSteps();
   saveDraft();
