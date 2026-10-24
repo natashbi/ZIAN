@@ -6,6 +6,16 @@
 <title>Zian's Christening</title>
 <meta name="description" content="You're invited to Zian's Hot Wheels christening. Speed on over and celebrate with us!">
 <meta name="theme-color" content="#f7f6f0">
+<!-- Link preview in Messenger and Facebook; youre-invited/index.html carries the same lines -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zian's Christening">
+<meta property="og:title" content="You're invited to Zian's Christening!">
+<meta property="og:description" content="Saturday, 7 November 2026. Tap to open your invitation.">
+<meta property="og:image" content="https://natashbi.github.io/ZIAN/assets/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="You're invited to Zian's Christening, Saturday 7 November 2026">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Racing+Sans+One&display=swap">
@@ -765,6 +775,10 @@ At the back of GM Blu Carwash</span></dd></div>
       <div class="perf" aria-hidden="true"></div>
       <p class="pass-step" id="pass-step" tabindex="-1">Last step: tap Copy message, then paste it in Messenger and send it to the family.</p>
       <div class="backup">
+        <a class="btn btn-blue" id="send-btn" href="https://m.me/" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4c-4.7 0-8.5 3.3-8.5 7.5 0 2.3 1.1 4.3 2.9 5.7v3.3l3-1.6c.8.2 1.7.3 2.6.3 4.7 0 8.5-3.3 8.5-7.6S16.7 4 12 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          Send on Messenger
+        </a>
         <button class="btn btn-blue" id="copy-btn" type="button">
           <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8.5" y="8.5" width="11" height="12" rx="2.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 8.5V6.2a2.2 2.2 0 0 0-2.2-2.2H6.7a2.2 2.2 0 0 0-2.2 2.2v8.6a2.2 2.2 0 0 0 2.2 2.2h1.8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
           <span id="copy-label">Copy message</span>
@@ -828,7 +842,10 @@ const PARTY = {
     end: "",   // optional, e.g. "2026-11-07T16:00:00+08:00"; without it the invite shows only the start time
     place: "Lety's Place Private Pool and Event Center\nPurok 2, Brgy. Sto. Rosario Young, Zaragoza, Nueva Ecija\nAt the back of GM Blu Carwash",
     map: "Lety's Place Private Pool and Event Center, Zaragoza, Nueva Ecija"
-  }
+  },
+  // RSVPs open this chat in the Messenger app: the username from the family's Facebook profile link
+  // (the part after facebook.com/). Leave "" and the RSVP button only copies the message.
+  messenger: ""
 };
 /* Monthly milestones, months 1 to 12: one line under each photo.
    photo: a file in assets/; leave "" to show the month number in a tire */
@@ -1535,6 +1552,27 @@ $("#copy-btn").addEventListener("click", () => {
   if (!navigator.clipboard || !navigator.clipboard.writeText) return fallback();
   navigator.clipboard.writeText(msgEl.textContent).then(copied, fallback);
 });
+
+/* Send on Messenger: an m.me link opens the family's chat in the Messenger app on Android and iPhone.
+   Messenger doesn't let a website type or send the message, so the tap copies it and the guest pastes it there. */
+const sendBtn = $("#send-btn");
+if (PARTY.messenger) {
+  sendBtn.href = "https://m.me/" + enc(PARTY.messenger);
+  sendBtn.hidden = false;
+  $("#copy-btn").classList.replace("btn-blue", "btn-line");
+  $("#pass-step").textContent = "Last step: tap Send on Messenger. Your message is already copied, so in our chat just paste it and tap Send.";
+  sendBtn.addEventListener("click", () => {
+    // Copies right away (not in a promise): the phone switches to Messenger as soon as the link opens
+    const msgEl = $("#pass-msg");
+    selectText(msgEl);
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) {}
+    getSelection().removeAllRanges();
+    if (!ok && navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(msgEl.textContent).catch(() => {});
+    toast("Message copied. Paste it in our chat and tap Send.");
+    buzz(15);
+  });
+}
 
 /* Sections give a small lift as they scroll into view (they are visible before that) */
 if ("IntersectionObserver" in window && !reduceMotion.matches) {

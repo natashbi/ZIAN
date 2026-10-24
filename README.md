@@ -12,7 +12,7 @@ What guests can do:
 - See the ceremony and reception details, the dress code (tap a shirt to spin it), the Ninongs and Ninangs, and a live countdown to the ceremony
 - Swipe through **Lap by lap**, Zian's first 12 months, while a little car drives along the track to the checkered flag
 - Add the event to Google Calendar, or open directions to the church and the reception in Google Maps
-- RSVP: type their name, set how many are coming, tap **Coming!** or **Can't make it**, then **Copy message** and paste it to the family on Messenger
+- RSVP: type their name, set how many are coming, tap **Coming!** or **Can't make it**, then **Send on Messenger**: the family's chat opens in the Messenger app with the message already copied, so they paste it and tap Send. Without a Messenger username set, the button is **Copy message** and they paste it to the family themselves
 
 ## Edit the event details
 
@@ -33,11 +33,13 @@ const PARTY = {
     end: "",                 // optional; without it only the start time shows
     place: "Lety's Place Private Pool and Event Center\nPurok 2, Brgy. Sto. Rosario Young, Zaragoza, Nueva Ecija\nAt the back of GM Blu Carwash",
     map: "Lety's Place Private Pool and Event Center, Zaragoza, Nueva Ecija"
-  }
+  },
+  messenger: ""              // the family's username from their Facebook profile link
 };
 ```
 
 - `place` is what the invite shows (`\n` starts a new line); `map` is what Google Maps searches for.
+- `messenger` is the part after `facebook.com/` in the family's profile link. RSVPs then open that chat with an `m.me` link, which phones hand to the Messenger app on Android and iPhone. Messenger doesn't let a website type or send a message, so the guest pastes the copied message and taps Send.
 - The weekday, calendar entry, directions, countdown and RSVP message are all worked out from these values.
 
 The Ninongs and Ninangs are listed directly in the HTML, in the section with the heading "Ninongs & Ninangs". The dress code is in the HTML too, in the section with the heading "Dress code".
@@ -53,11 +55,17 @@ The **Lap by lap** cards come from the `MILESTONES` list just below `PARTY`, one
 - `text` is the line under the card.
 - `photo` is the picture in `assets/`. The cards are portrait (4:5), so crop a new photo to that shape with Zian in frame. With `""` (or if the file is missing) the card shows the month number in a tire instead.
 
+## The link to send
+
+Send guests **https://natashbi.github.io/ZIAN/youre-invited/**. In Messenger and on Facebook it shows a "You're invited to Zian's Christening!" preview with Zian's photo (`assets/share.jpg`), then opens the invite. The plain `https://natashbi.github.io/ZIAN/` link still works and shows the same preview.
+
+The preview's words are in the `og:` lines at the top of both `index.html` and `youre-invited/index.html`; if the date changes, change both and remake `assets/share.jpg` (1200 × 630). Messenger keeps a copy of a link's preview for a while, so a change can take time to show on links already sent.
+
 ## Personal links (optional)
 
-The plain link shows no guest name, so the same link can go to everyone. To greet one person by name, add it to the end of the link (dashes become spaces). The card then shows "Special invite for" with that name, and the name is filled in on the RSVP:
+The plain link shows no guest name, so the same link can go to everyone. To greet one person by name, add it to the end of the link (dashes become spaces). The card and the opening screen then show "Special invite for" with that name, and the name is filled in on the RSVP:
 
-- `https://<your-site>/#Ninong-Jerald` shows **Ninong Jerald**
+- `https://natashbi.github.io/ZIAN/youre-invited/#Ninong-Jerald` shows **Ninong Jerald**
 
 ## Photo and logo
 
