@@ -12,7 +12,7 @@ What guests can do:
 - See the ceremony and reception details, the dress code (tap a shirt to spin it), the Ninongs and Ninangs, and a live countdown to the ceremony
 - Swipe through **Lap by lap**, Zian's first 12 months, while a little car drives along the track to the checkered flag
 - Add the event to Google Calendar, or open directions to the church and the reception in Google Maps
-- RSVP: type their name, set how many are coming, tap **Coming!** or **Can't make it**, then **Send on Messenger**: the family's chat opens in the Messenger app with the message already copied, so they paste it and tap Send. Without a Messenger username set, the button is **Copy message** and they paste it to the family themselves
+- RSVP: type their name, set how many are coming, and tap **Coming!** or **Can't make it**. With the family's Google Form set up, that's it: the answer goes straight into the guest list (see "Guest list" below). Without it, guests finish on Messenger: **Send on Messenger** opens the family's chat with the message copied (when `messenger` is set), or **Copy message** lets them paste it to the family
 
 ## Edit the event details
 
@@ -34,7 +34,8 @@ const PARTY = {
     place: "Lety's Place Private Pool and Event Center\nPurok 2, Brgy. Sto. Rosario Young, Zaragoza, Nueva Ecija\nAt the back of GM Blu Carwash",
     map: "Lety's Place Private Pool and Event Center, Zaragoza, Nueva Ecija"
   },
-  messenger: ""              // the family's username from their Facebook profile link
+  messenger: "",             // the family's username from their Facebook profile link
+  rsvpForm: { action: "", name: "", attending: "", guests: "" }   // see "Guest list" below
 };
 ```
 
@@ -43,6 +44,20 @@ const PARTY = {
 - The weekday, calendar entry, directions, countdown and RSVP message are all worked out from these values.
 
 The Ninongs and Ninangs are listed directly in the HTML, in the section with the heading "Ninongs & Ninangs". The dress code is in the HTML too, in the section with the heading "Dress code".
+
+## Guest list (Google Form)
+
+With a Google Form connected, a guest's tap on **Coming!** or **Can't make it** goes straight into the family's guest list: no copying, pasting or Messenger. The family sees every answer in the form's **Responses** tab (and can get an email for each one).
+
+1. Go to [forms.google.com](https://forms.google.com) and start a **Blank form**, e.g. "Zian's Christening RSVP".
+2. Add three questions, all **Short answer**: **Name**, **Attending**, **How many**.
+3. Leave **Collect email addresses** and **Limit to 1 response** off in **Settings**, so guests don't have to sign in.
+4. Open the ⋮ menu, choose **Get pre-filled link**, type anything in the three answers, tap **Get link**, then **Copy link**.
+5. From that link, fill in `PARTY.rsvpForm`: `action` is the form address with `viewform…` replaced by `formResponse`, and `name`, `attending` and `guests` are the `entry.…` numbers of the three questions, in order.
+6. In the **Responses** tab, turn on **Get email notifications for new responses** in the ⋮ menu, and tap **Link to Sheets** for a spreadsheet of who's coming.
+7. Send one test RSVP from the live link, check that it shows up under **Responses**, then delete it.
+
+Each answer arrives as Name, Attending ("Coming" or "Can't make it") and How many (0 for Can't make it). A guest who changes their answer sends a new one; the latest counts. If a guest's phone can't reach Google, the invite offers **Try again** and the Messenger way as a backup.
 
 ## Monthly milestones
 

@@ -287,6 +287,9 @@ body{
 .perf{margin-inline:-16px;border-top:3px dashed var(--ink);opacity:.35}
 .pass-step{margin:0;font-weight:700}
 .pass-step:focus{outline:none}
+.pass-step.sent{font-size:var(--t-lg);line-height:1.25}
+.pass-step.sent::before{content:"✓";display:inline-grid;place-items:center;width:1.5em;height:1.5em;margin-right:8px;border-radius:50%;background:var(--go);color:var(--ink);font-size:.8em;vertical-align:.1em}
+.answer-row .btn:disabled{opacity:.7;cursor:default}
 .backup{display:flex;flex-direction:column;gap:12px}
 .pass-msg{margin:0;padding:12px 14px;border-radius:12px;background:var(--field);font-weight:600;line-height:1.35;user-select:text;-webkit-user-select:text}
 .linkish{align-self:flex-start;padding:4px 0;border:0;background:none;color:var(--ink);font:700 var(--t-md) var(--font-body);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
@@ -774,7 +777,8 @@ At the back of GM Blu Carwash</span></dd></div>
       <p class="pass-line" id="pass-line">1 racer · 1 pit crew</p>
       <div class="perf" aria-hidden="true"></div>
       <p class="pass-step" id="pass-step" tabindex="-1">Last step: tap Copy message, then paste it in Messenger and send it to the family.</p>
-      <div class="backup">
+      <button class="btn btn-red" id="retry-btn" type="button" hidden>Try again</button>
+      <div class="backup" id="backup">
         <a class="btn btn-blue" id="send-btn" href="https://m.me/" hidden>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4c-4.7 0-8.5 3.3-8.5 7.5 0 2.3 1.1 4.3 2.9 5.7v3.3l3-1.6c.8.2 1.7.3 2.6.3 4.7 0 8.5-3.3 8.5-7.6S16.7 4 12 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
           Send on Messenger
@@ -845,7 +849,15 @@ const PARTY = {
   },
   // RSVPs open this chat in the Messenger app: the username from the family's Facebook profile link
   // (the part after facebook.com/). Leave "" and the RSVP button only copies the message.
-  messenger: ""
+  messenger: "",
+  // Guest list: with the family's Google Form set here, Coming! and Can't make it send the answer straight to it
+  // (README, "Guest list"). Leave action "" and guests send their answer on Messenger instead.
+  rsvpForm: {
+    action: "",     // e.g. "https://docs.google.com/forms/d/e/1FAIpQL.../formResponse"
+    name: "",       // e.g. "entry.123456789", from the form's pre-filled link
+    attending: "",
+    guests: ""
+  }
 };
 /* Monthly milestones, months 1 to 12: one line under each photo.
    photo: a file in assets/; leave "" to show the month number in a tire */
@@ -1473,13 +1485,50 @@ function gridSlot(name) {
   return pad(h % 24 + 1);
 }
 
-function showPass(v, celebrate) {
+// Sends the answer to the family's Google Form; true once it reaches Google
+const formReady = !!(PARTY.rsvpForm && PARTY.rsvpForm.action && PARTY.rsvpForm.name);
+async function sendToHost(v) {
+  const f = PARTY.rsvpForm;
+  const body = new URLSearchParams();
+  body.append(f.name, v.name);
+  if (f.attending) body.append(f.attending, v.yes ? "Coming" : "Can't make it");
+  if (f.guests) body.append(f.guests, String(v.yes ? v.count : 0));
+  const ctrl = typeof AbortController === "function" ? new AbortController() : null;
+  const timer = setTimeout(() => { if (ctrl) ctrl.abort(); }, 10000);
+  try {
+    // Google doesn't let other sites read its reply, so reaching the server counts as sent
+    await fetch(f.action, { method: "POST", mode: "no-cors", body, signal: ctrl ? ctrl.signal : undefined });
+    return true;
+  } catch (e) {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// state: "sent" (it's in the family's guest list), "failed" (the form couldn't be reached),
+// or "" (no form set up: the guest sends the answer on Messenger)
+function showPass(v, celebrate, state = "") {
   $("#pass-title").textContent = v.yes ? "Pit pass" : "Spectator note";
   $("#pass-slot").textContent = v.yes ? `Grid slot ${gridSlot(v.name)}` : "Sitting this one out";
   $("#pass-name").textContent = v.name;
   $("#pass-line").textContent = v.yes ? `${v.count} ${v.count === 1 ? "guest" : "guests"} coming` : "Can't make it this time";
   $("#pass-msg").textContent = message(v);
   const step = $("#pass-step");
+  step.textContent = state === "sent"
+    ? `Sent! The family has your answer. ${v.yes ? "See you there!" : "Thank you!"}`
+    : state === "failed"
+      ? "We couldn't send your answer. Check your internet and tap Try again, or send it to us on Messenger."
+      : PARTY.messenger
+        ? "Last step: tap Send on Messenger. Your message is already copied, so in our chat just paste it and tap Send."
+        : "Last step: tap Copy message, then paste it in Messenger and send it to the family.";
+  step.classList.toggle("sent", state === "sent");
+  $("#retry-btn").hidden = state !== "failed";
+  $("#backup").hidden = state === "sent";
+  // Copy message is the main button only when it is the guest's last step
+  const copyMain = state === "" && !PARTY.messenger;
+  $("#copy-btn").classList.toggle("btn-blue", copyMain);
+  $("#copy-btn").classList.toggle("btn-line", !copyMain);
   $("#copy-label").textContent = "Copy message";
   form.hidden = true;
   pass.hidden = false;
@@ -1489,16 +1538,35 @@ function showPass(v, celebrate) {
     pass.classList.add("show");
     pass.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
     step.focus({ preventScroll: true });
-    buzz(v.yes ? [30, 40, 60] : 20);
-    if (v.yes) setTimeout(() => burstFrom($("#pass-name"), 100), 350);
+    const party = v.yes && state !== "failed";
+    buzz(party ? [30, 40, 60] : 20);
+    if (party) setTimeout(() => burstFrom($("#pass-name"), 100), 350);
   }
 }
 
 // Which answer button was tapped (Enter in the name field counts as "Coming!")
-let choice = "yes";
+let choice = "yes", sending = false;
 $$(".answer-row .btn").forEach(btn => btn.addEventListener("click", () => { choice = btn.value; }));
+// Sends the answer to the guest list when there is one, saves it, and shows the pass
+async function answer(v, busyBtn) {
+  let state = "";
+  if (formReady) {
+    sending = true;
+    const btns = [...$$(".answer-row .btn"), $("#retry-btn")], label = busyBtn.textContent;
+    btns.forEach(b => { b.disabled = true; });
+    busyBtn.textContent = "Sending…";
+    state = await sendToHost(v) ? "sent" : "failed";
+    busyBtn.textContent = label;
+    btns.forEach(b => { b.disabled = false; });
+    sending = false;
+  }
+  store.set({ ...v, done: true, state });
+  if (v.yes && state !== "failed") Sound.beep(880, 0.2);
+  showPass(v, true, state);
+}
 form.addEventListener("submit", e => {
   e.preventDefault();
+  if (sending) return;
   const v = { ...collect(), yes: choice !== "no" };
   err.hidden = true;
   if (!v.name) {
@@ -1507,9 +1575,12 @@ form.addEventListener("submit", e => {
     nameIn.focus();
     return;
   }
-  store.set({ ...v, done: true });
-  if (v.yes) Sound.beep(880, 0.2);
-  showPass(v, true);
+  answer(v, v.yes ? $("#btn-yes") : $("#btn-no"));
+});
+$("#retry-btn").addEventListener("click", () => {
+  const s = store.get();
+  if (sending || !s || !s.name) return;
+  answer({ name: s.name, count: clampCount(s.count), yes: s.yes !== false }, $("#retry-btn"));
 });
 
 $("#edit-btn").addEventListener("click", () => {
@@ -1559,8 +1630,6 @@ const sendBtn = $("#send-btn");
 if (PARTY.messenger) {
   sendBtn.href = "https://m.me/" + enc(PARTY.messenger);
   sendBtn.hidden = false;
-  $("#copy-btn").classList.replace("btn-blue", "btn-line");
-  $("#pass-step").textContent = "Last step: tap Send on Messenger. Your message is already copied, so in our chat just paste it and tap Send.";
   sendBtn.addEventListener("click", () => {
     // Copies right away (not in a promise): the phone switches to Messenger as soon as the link opens
     const msgEl = $("#pass-msg");
@@ -1614,7 +1683,7 @@ if (saved && typeof saved === "object") {
 }
 if (guest && !nameIn.value.trim()) nameIn.value = guest;
 syncSteps();
-if (saved && saved.done && saved.name) showPass({ ...collect(), yes: saved.yes !== false }, false);
+if (saved && saved.done && saved.name) showPass({ ...collect(), yes: saved.yes !== false }, false, saved.state || "");
 </script>
 </body>
 </html>
