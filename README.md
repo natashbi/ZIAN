@@ -1,6 +1,6 @@
-# Zian's Christening
+# Zian's 2nd Birthday & Christening
 
-An interactive, phone-first Hot Wheels christening invitation, styled as a die-cast toy package on a `#f7f6f0` page. Everything lives in `index.html`, with the photo and logo in `assets/`.
+An interactive, phone-first Hot Wheels invitation to Zian's 2nd birthday and christening, styled as a die-cast toy package on a `#f7f6f0` page. Everything lives in `index.html`, with the photo and logo in `assets/`.
 
 What guests can do:
 
@@ -21,7 +21,7 @@ Open `index.html` and change the `PARTY` block near the top of the `<script>`:
 ```js
 const PARTY = {
   name: "Zian",
-  event: "Christening",
+  event: "2nd Birthday & Christening",
   // Times include the UTC offset: +08:00 is Philippine time
   ceremony: {
     start: "2026-11-07T10:00:00+08:00",
@@ -72,9 +72,9 @@ The **Lap by lap** cards come from the `MILESTONES` list just below `PARTY`, one
 
 ## The link to send
 
-Send guests **https://natashbi.github.io/ZIAN/youre-invited/**. In Messenger and on Facebook it shows a "You're invited to Zian's Christening!" preview with Zian's photo (`assets/share.jpg`), then opens the invite. The plain `https://natashbi.github.io/ZIAN/` link still works and shows the same preview.
+Send guests **https://natashbi.github.io/ZIAN/youre-invited/**. In Messenger and on Facebook it shows a "You're invited to Zian's 2nd Birthday & Christening!" preview with Zian's photo (`assets/share-card.jpg`), then opens the invite. The plain `https://natashbi.github.io/ZIAN/` link still works and shows the same preview.
 
-The preview's words are in the `og:` lines at the top of both `index.html` and `youre-invited/index.html`; if the date changes, change both and remake `assets/share.jpg` (1200 × 630). Messenger keeps a copy of a link's preview for a while, so a change can take time to show on links already sent.
+The preview's words are in the `og:` lines at the top of both `index.html` and `youre-invited/index.html`; if the date changes, change both and remake the preview picture (1200 × 630) under a new file name. Messenger keeps a copy of a link's preview for a while, so a change can take time to show on links already sent.
 
 ## Personal links (optional)
 

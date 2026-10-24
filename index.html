@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Zian's Christening</title>
-<meta name="description" content="You're invited to Zian's Hot Wheels christening. Speed on over and celebrate with us!">
+<title>Zian's 2nd Birthday &amp; Christening</title>
+<meta name="description" content="You're invited to Zian's Hot Wheels 2nd birthday and christening. Speed on over and celebrate with us!">
 <meta name="theme-color" content="#f7f6f0">
 <!-- Link preview in Messenger and Facebook; youre-invited/index.html carries the same lines -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Zian's Christening">
-<meta property="og:title" content="You're invited to Zian's Christening!">
+<meta property="og:site_name" content="Zian's 2nd Birthday &amp; Christening">
+<meta property="og:title" content="You're invited to Zian's 2nd Birthday &amp; Christening!">
 <meta property="og:description" content="Saturday, 7 November 2026. Tap to open your invitation.">
-<meta property="og:image" content="https://natashbi.github.io/ZIAN/assets/share.jpg">
+<meta property="og:image" content="https://natashbi.github.io/ZIAN/assets/share-card.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="You're invited to Zian's Christening, Saturday 7 November 2026">
+<meta property="og:image:alt" content="You're invited to Zian's 2nd Birthday &amp; Christening, Saturday 7 November 2026">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -198,7 +198,7 @@ body{
 .tap-hint{margin:-6px 0 0;font-size:var(--t-sm);font-weight:600;color:var(--chrome-2);text-wrap:balance}
 
 .hello{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
-.event-line{margin:0;font-weight:800;font-size:var(--t-lg);letter-spacing:.14em;text-transform:uppercase}
+.event-line{margin:0;font-weight:800;font-size:var(--t-lg);letter-spacing:.14em;text-transform:uppercase;text-wrap:balance}
 .tagline{margin:0;font-weight:600;font-size:var(--t-lg);text-wrap:balance}
 
 .starter{display:flex;gap:10px;width:100%}
@@ -341,10 +341,10 @@ body{
 @keyframes sun{to{rotate:360deg}}
 .gate-body{position:relative;flex:1;min-height:0;display:flex;overflow-y:auto;overscroll-behavior:contain;padding-inline:16px}
 .gate-inner{margin:auto;width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2.4vh,18px);padding-block:16px}
-.gate-logo{display:block;width:min(80%,300px,44vh);height:auto;filter:drop-shadow(0 6px 10px var(--shade));animation:hang .7s cubic-bezier(.2,1.2,.4,1) .15s backwards}
-.gate-h{margin:-4px 0 0;display:flex;flex-direction:column;gap:2px;font-weight:800;font-size:var(--t-lg);line-height:1.15;letter-spacing:.14em;text-transform:uppercase}
+.gate-logo{display:block;width:min(80%,300px,40vh);height:auto;filter:drop-shadow(0 6px 10px var(--shade));animation:hang .7s cubic-bezier(.2,1.2,.4,1) .15s backwards}
+.gate-h{margin:-4px 0 0;display:flex;flex-direction:column;gap:2px;text-wrap:balance;font-weight:800;font-size:var(--t-lg);line-height:1.15;letter-spacing:.14em;text-transform:uppercase}
 .gate-kicker{font-size:var(--t-xs);letter-spacing:.3em;color:var(--series)}
-.gate-photo{position:relative;width:min(100%,54vh);aspect-ratio:3/2;overflow:hidden;border-radius:24px;border:3px solid var(--gloss);background:var(--card-deep);box-shadow:0 14px 26px var(--shade);rotate:-2deg;animation:pop .6s cubic-bezier(.2,1.4,.4,1) .35s backwards}
+.gate-photo{position:relative;width:min(100%,50vh);aspect-ratio:3/2;overflow:hidden;border-radius:24px;border:3px solid var(--gloss);background:var(--card-deep);box-shadow:0 14px 26px var(--shade);rotate:-2deg;animation:pop .6s cubic-bezier(.2,1.4,.4,1) .35s backwards}
 .gate-photo img{display:block;width:100%;height:100%;object-fit:cover}
 .gate-photo::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 6px var(--gloss-soft);background:linear-gradient(100deg,transparent 8%,var(--gloss-soft) 9% 16%,transparent 17% 78%,var(--gloss-soft) 80% 83%,transparent 84%)}
 .gate-date{margin:0;font-weight:700;letter-spacing:.06em;color:var(--chrome-2)}
@@ -352,7 +352,13 @@ body{
 .gate-btn::after{content:"";position:absolute;inset:-7px;border-radius:20px;border:3px solid var(--flame-yellow);opacity:0;pointer-events:none;animation:ring 1.6s ease-out 1.2s infinite}
 @keyframes ring{from{opacity:.9;transform:scale(.97)}to{opacity:0;transform:scale(1.1,1.3)}}
 .counting .gate-btn::after{animation:none}
-@media (max-height:600px){.gate-logo{width:min(70%,36vh)}.gate-photo{width:min(100%,44vh)}}
+/* A guest's name takes room at the top, so the logo and photo give a little back */
+.gate.named .gate-logo{width:min(70%,260px,34vh)}
+.gate.named .gate-photo{width:min(100%,42vh)}
+@media (max-height:600px){
+  .gate-logo{width:min(70%,36vh)}.gate-photo{width:min(100%,44vh)}
+  .gate.named .gate-logo{width:min(60%,28vh)}.gate.named .gate-photo{width:min(100%,34vh)}
+}
 
 /* Photo finish: a stack of race photos; a tap deals the next one */
 .snaps{position:relative;display:grid;width:100%;aspect-ratio:3/2;margin-block:2px;padding:0;border:0;border-radius:16px;background:none;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -445,7 +451,7 @@ body{
         <span class="invitee-n" id="gate-name"></span>
       </p>
       <img class="gate-logo" src="assets/zian-logo.webp" alt="" width="900" height="335" onerror="this.hidden=true">
-      <h2 class="gate-h" id="gate-h"><span class="gate-kicker">You're invited to</span><span data-bind="eventName">Zian's Christening</span></h2>
+      <h2 class="gate-h" id="gate-h"><span class="gate-kicker">You're invited to</span><span data-bind="eventName">Zian's 2nd Birthday &amp; Christening</span></h2>
       <div class="gate-photo">
         <img src="assets/zian-race-1.webp" alt="Zian smiling on his red ride-on car" width="1200" height="801" fetchpriority="high" onerror="this.hidden=true">
         <div class="lights" aria-hidden="true"><i class="light"></i><i class="light"></i><i class="light"></i><i class="light go"></i></div>
@@ -480,11 +486,11 @@ body{
       </p>
 
       <h1 class="title">
-        <span class="sr-only" data-bind="headline">You're invited to Zian's Christening</span>
+        <span class="sr-only" data-bind="headline">You're invited to Zian's 2nd Birthday &amp; Christening</span>
         <img class="logo" id="logo" src="assets/zian-logo.webp" alt="" width="900" height="335" onerror="this.hidden=true;document.getElementById('name-text').hidden=false">
         <span class="name-text" id="name-text" data-bind="name" aria-hidden="true" hidden>Zian</span>
       </h1>
-      <p class="series">Christening Series</p>
+      <p class="series">2nd Birthday Series</p>
 
       <div class="blister-wrap">
         <div class="blister" id="blister">
@@ -583,7 +589,7 @@ body{
       <p class="tap-hint">Tap the car to rev it, swipe it to race, or tap the photo</p>
 
       <div class="hello">
-        <p class="event-line" data-bind="eventName">Zian's Christening</p>
+        <p class="event-line" data-bind="eventName">Zian's 2nd Birthday &amp; Christening</p>
         <p class="tagline">Speed on over and celebrate with us!</p>
       </div>
 
@@ -809,7 +815,7 @@ At the back of GM Blu Carwash</span></dd></div>
       <img src="assets/zian-face.webp" id="box-photo" alt="Photo of Zian" width="760" height="760" onerror="this.hidden=true">
     </span>
   </div>
-  <p class="box-cap" id="box-cap">God bless you, <span data-bind="name">Zian</span>!</p>
+  <p class="box-cap" id="box-cap">Happy 2nd birthday &amp; God bless, <span data-bind="name">Zian</span>!</p>
   <button class="btn" id="photo-close" type="button">Close</button>
 </dialog>
 
@@ -834,7 +840,7 @@ At the back of GM Blu Carwash</span></dd></div>
 /* ---------- Party details: edit these ---------- */
 const PARTY = {
   name: "Zian",
-  event: "Christening",
+  event: "2nd Birthday & Christening",
   // Times include the UTC offset: +08:00 is Philippine time.
   // place: what the invite shows (each new line starts a new line on the card); "" shows "Church details to follow"
   // map: what Google Maps searches for; leave "" to search for the place itself
@@ -1128,6 +1134,7 @@ if (root.classList.contains("gate-on")) {
   if (guest) {
     $("#gate-name").textContent = guest;
     $("#gate-for").hidden = false;
+    gate.classList.add("named");
   }
   let opening = false;
   gate.addEventListener("click", async () => {
