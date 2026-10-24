@@ -84,11 +84,11 @@ The plain link shows no guest name, so the same link can go to everyone. To gree
 
 ## Photo and logo
 
-- `assets/zian-photo.webp`: Zian's photo, shown inside the tire in the toy package. Use a square image with the face centered; a transparent background works best.
+- `assets/zian-face.webp`: Zian's face, shown inside the tire in the toy package and in the photo pop-up. Use a square image with the face centered.
 - `assets/zian-logo.webp`: the ZIAN flame logo at the top of the card and on the opening screen.
 - `assets/zian-race-1.webp` and `assets/zian-race-2.webp`: the race-day photos. The first one is also on the opening screen. Both are landscape (3:2).
 
-Replace either file with one of the same name to change it. If a file is missing, the page shows the first letter of the name in the tire and the name as text instead of the logo.
+To change a picture, save the new one under a new file name and change that name in `index.html`. Phones keep a saved copy of each picture for a while, so a new picture under an old name can keep showing the old one. If a file is missing, the page shows the first letter of the name in the tire and the name as text instead of the logo.
 
 ## Put it online
 
