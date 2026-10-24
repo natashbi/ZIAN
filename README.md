@@ -44,14 +44,14 @@ The Ninongs and Ninangs are listed directly in the HTML, in the section with the
 
 ## Monthly milestones
 
-The **Lap by lap** cards come from the `MILESTONES` list just below `PARTY`, one line per month from the 1st to the 12th. The text there now is a sample: replace each line with Zian's own milestone.
+The **Lap by lap** cards come from the `MILESTONES` list just below `PARTY`, one line per month from the 1st to the 12th. Each card shows Zian's monthly photo (`assets/month-1.webp` to `assets/month-12.webp`) with a short line about it.
 
 ```js
-{ text: "First real smile", photo: "assets/month-2.webp" },
+{ text: "A 2nd-month cake from Kuya", photo: "assets/month-2.webp" },
 ```
 
 - `text` is the line under the card.
-- `photo` is optional: put the picture in `assets/` and write its path. Square photos fit best. With `""` (or if the file is missing) the card shows the month number in a tire instead.
+- `photo` is the picture in `assets/`. The cards are portrait (4:5), so crop a new photo to that shape with Zian in frame. With `""` (or if the file is missing) the card shows the month number in a tire instead.
 
 ## Personal links (optional)
 

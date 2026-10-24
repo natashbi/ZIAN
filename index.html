@@ -385,9 +385,9 @@ body{
 .ms-reel::-webkit-scrollbar{display:none}
 .ms-card{margin:0;min-width:0;scroll-snap-align:center;cursor:pointer;opacity:.55;transform:scale(.92);transition:transform .35s cubic-bezier(.3,1.2,.5,1),opacity .35s}
 .ms-card.on{opacity:1;transform:none;cursor:default}
-.ms-pic{position:relative;aspect-ratio:1;overflow:hidden;border-radius:20px;background:radial-gradient(75% 75% at 50% 45%,var(--gloss-soft),transparent 70%),var(--c);box-shadow:inset 0 -18px 26px -10px var(--shade),0 10px 18px -10px var(--shadow)}
+.ms-pic{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:20px;background:radial-gradient(75% 75% at 50% 45%,var(--gloss-soft),transparent 70%),var(--c);box-shadow:inset 0 -18px 26px -10px var(--shade),0 10px 18px -10px var(--shadow)}
 .ms-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.ms-tire{position:absolute;inset:17%}
+.ms-tire{position:absolute;left:17%;right:17%;top:50%;aspect-ratio:1;translate:0 -50%}
 .ms-tire b{font-family:var(--font-display);font-weight:400;font-size:clamp(3rem,15vw,4.25rem);line-height:1;color:var(--ink)}
 .ms-tag{position:absolute;left:10px;top:10px;z-index:1;padding:4px 10px;border-radius:999px;background:var(--flame-yellow);color:var(--ink);font-weight:800;font-size:var(--t-sm);letter-spacing:.08em;text-transform:uppercase;box-shadow:0 3px 0 var(--flame-red)}
 .ms-card.on .ms-tag{animation:pop .45s cubic-bezier(.2,1.5,.4,1)}
@@ -830,21 +830,21 @@ const PARTY = {
     map: "Lety's Place Private Pool and Event Center, Zaragoza, Nueva Ecija"
   }
 };
-/* Monthly milestones, months 1 to 12. SAMPLE TEXT: replace each line with Zian's own.
-   photo: a file in assets/, e.g. "assets/month-1.webp"; leave "" to show the month number in a tire */
+/* Monthly milestones, months 1 to 12: one line under each photo.
+   photo: a file in assets/; leave "" to show the month number in a tire */
 const MILESTONES = [
-  { text: "Hello, world! Our newest racer joins the pit crew", photo: "" },
-  { text: "First real smile", photo: "" },
-  { text: "Laughing out loud", photo: "" },
-  { text: "Rolling over like a pro", photo: "" },
-  { text: "Grabbing everything in reach", photo: "" },
-  { text: "First taste of solid food", photo: "" },
-  { text: "Sitting up on his own", photo: "" },
-  { text: "Crawling at full speed", photo: "" },
-  { text: "Pulling up to stand", photo: "" },
-  { text: "First bye-bye wave", photo: "" },
-  { text: "Cruising along the furniture", photo: "" },
-  { text: "First steps and a first birthday!", photo: "" }
+  { text: "One month old and ready to roll", photo: "assets/month-1.webp" },
+  { text: "A 2nd-month cake from Kuya", photo: "assets/month-2.webp" },
+  { text: "All smiles at three months", photo: "assets/month-3.webp" },
+  { text: "Big laughs at four months", photo: "assets/month-4.webp" },
+  { text: "Sneakers on, thumbs up!", photo: "assets/month-5.webp" },
+  { text: "Half a year old and all smiles", photo: "assets/month-6.webp" },
+  { text: "Seven months of giggles", photo: "assets/month-7.webp" },
+  { text: "Eight months, toy in hand", photo: "assets/month-8.webp" },
+  { text: "Looking sharp in blue", photo: "assets/month-9.webp" },
+  { text: "Showing off those little teeth", photo: "assets/month-10.webp" },
+  { text: "Red stripes and a big smile", photo: "assets/month-11.webp" },
+  { text: "One year old and waving hi!", photo: "assets/month-12.webp" }
 ];
 /* Photo and logo live in assets/zian-photo.webp and assets/zian-logo.webp */
 /* ----------------------------------------------- */
